@@ -5,6 +5,7 @@
   hosts: all
   vars_files:
     - vars/main.yml
+    - vars/parameters.yml
   roles:
     - basic
     - mariadb

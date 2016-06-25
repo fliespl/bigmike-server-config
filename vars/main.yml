@@ -1,7 +1,5 @@
 ntp_timezone: Europe/Warsaw
 
-include: parameters.yml
-
 php_versions:
   - { version: 5.4.45, modules: ["imagick", "memcache"]}
   - { version: 5.5.36, modules: ["imagick", "memcache"]}
