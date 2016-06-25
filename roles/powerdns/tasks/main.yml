@@ -1,0 +1,37 @@
+- name: Install pdns
+  apt: name=pdns-server state=installed
+
+- name: Install pdns mysql backend
+  apt: name=pdns-backend-mysql state=installed
+
+- name: Set pdns config
+  lineinfile: dest=/etc/powerdns/pdns.d/pdns.local.conf regexp="{{ item.regexp }}" line="{{ item.line }}"
+  with_items:
+    - { regexp: ^allow-axfr-ips=, line: "allow-axfr-ips=213.186.33.199"}
+    - { regexp: ^allow-recursion=, line: "allow-recursion=0.0.0.0/0"}
+
+- name: Create pdns database
+  mysql_db: login_user=root login_password={{ mysql_root_password }} name={{ pdns_mysql_db }} state=present encoding=utf8
+
+- name: Check if database empty
+  shell: /usr/bin/mysql -Bse "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = '{{ pdns_mysql_db }}';"
+  register: powerdns_database_tables_count
+  changed_when: false
+
+- name: Import pdns schema
+  mysql_db: state=import name={{ pdns_mysql_db }} target=other/sql/pdns.sql
+  when: powerdns_database_tables_count.stdout == "0"
+
+- name: Create pdns user
+  mysql_user: login_user=root login_password={{ mysql_root_password }} name={{ pdns_mysql_user }} password={{ pdns_mysql_pass }} priv="{{ pdns_mysql_db }}.*:ALL" state=present
+
+- name: Set pdns mysql config
+  lineinfile: dest=/etc/powerdns/pdns.d/pdns.local.gmysql.conf regexp="{{ item.regexp }}" line="{{ item.line }}"
+  with_items:
+    - { regexp: ^gmysql-host=, line: "gmysql-host=127.0.0.1"}
+    - { regexp: ^gmysql-dbname=, line: "gmysql-dbname={{ pdns_mysql_db }}"}
+    - { regexp: ^gmysql-user=, line: "gmysql-user={{ pdns_mysql_user }}"}
+    - { regexp: ^gmysql-password=, line: "gmysql-password={{ pdns_mysql_pass }}"}
+
+- name: restart pdns
+  service: name=pdns state=restarted

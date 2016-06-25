@@ -1,0 +1,24 @@
+ntp_timezone: Europe/Warsaw
+
+include: parameters.yml
+
+php_versions:
+  - { version: 5.4.45, modules: ["imagick", "memcache"]}
+  - { version: 5.5.36, modules: ["imagick", "memcache"]}
+  - { version: 5.6.22, modules: ["imagick", "memcache"]}
+  - { version: 7.0.7,  modules: ["imagick"]}
+
+default_php: 7.0.7
+
+pdns_mysql_db: config_pdns
+pdns_mysql_user: pdns
+
+proftpd_mysql_db: config_proftpd
+proftpd_mysql_user: proftpd
+
+
+postfix_mysql_db: config_postfix
+postfix_mysql_user: postfix
+
+roundcube_mysql_db: config_roundcube
+roundcube_mysql_user: roundcube

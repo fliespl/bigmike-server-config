@@ -1,0 +1,11 @@
+server_root_password:
+mysql_root_password:
+server_domain:
+fqdn_domain:
+
+pdns_mysql_pass:
+proftpd_mysql_pass:
+postfix_mysql_pass:
+roundcube_mysql_pass:
+admin1_mail:
+admin2_mail:

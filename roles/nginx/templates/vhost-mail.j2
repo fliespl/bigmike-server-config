@@ -1,0 +1,48 @@
+server {
+    listen 80;
+    server_name mail.{{ server_domain }};
+    return 301 https://mail.{{ server_domain }}$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    server_name mail.{{ server_domain }};
+    root {{ mail_vhost_htdocs }};
+    index index.php index.html index.htm;
+
+    include global/restrictions.conf;
+    include global/ssl-params.conf;
+
+    ssl_certificate /etc/letsencrypt/live/{{ server_domain }}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/{{ server_domain }}/privkey.pem;
+
+    access_log {{ mail_vhost_logs }}/access.log;
+    error_log {{ mail_vhost_logs }}/error.log;
+
+    location / {
+        try_files $uri $uri/ /index.php?q=$uri&$args;
+    }
+
+    location ~ ^/(README.md|INSTALL|LICENSE|CHANGELOG|UPGRADING)$ {
+        deny all;
+    }
+
+    location ~ ^/(config|temp|logs)/ {
+        deny all;
+    }
+
+    location ~ /\. {
+        deny all;
+        access_log off;
+        log_not_found off;
+    }
+
+    # pass the PHP scripts to FastCGI server listening on /var/run/php5-fpm.sock
+    location ~ \.php$ {
+        try_files $uri =404;
+        fastcgi_pass unix:/opt/phpfarm/inst/php-{{ default_php }}/var/run/php-fpm.sock;
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+}

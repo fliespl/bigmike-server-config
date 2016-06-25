@@ -1,0 +1,55 @@
+- name: Set hostname
+  hostname: name="{{ server_domain }}"
+
+- name: Set /etc/hosts
+  lineinfile: dest=/etc/hosts regexp="^127\.0\.0\.1" line="127.0.0.1 {{ server_domain }} bigmike localhost"
+
+- name: Set /etc/hosts fix for www.php.net
+  lineinfile: dest=/etc/hosts regexp="^72\.52\.91\.14" line="72.52.91.14 www.php.net"
+
+- name: Set the correct timezone.
+  file:
+    src: "/usr/share/zoneinfo/{{ ntp_timezone }}"
+    dest: /etc/localtime
+    state: link
+    force: yes
+
+- name: Install aptitude
+  apt: name=aptitude state=installed
+
+- name: Update APT package cache
+  apt: update_cache=yes cache_valid_time=3600
+
+- name: Upgrade APT to the latest packages
+  apt: upgrade=safe
+
+- name: Adjust APT update intervals
+  copy: src="other/apt_periodic" dest=/etc/apt/apt.conf.d/10periodic
+
+- name: Install required packages
+  include: packages.yml
+
+
+
+
+
+- name: Change root password
+  user: name=root password="{{ server_root_password }}"
+
+- name: Add admin group
+  group: name=admin state=present
+
+- name: Add admin users
+  user: name="{{ item }}" shell=/bin/bash group=admin
+  with_items:
+  - flies
+  - japcok
+
+- name: Add authorized keys for flies user
+  authorized_key: user=flies key="{{ lookup('file', 'other/ssh/flies.pub') }}"
+
+- name: Add authorized keys for japcok user
+  authorized_key: user=japcok key="{{ lookup('file', 'other/ssh/japcok.pub') }}"
+
+- name: Add flies to sudoers
+  lineinfile: "dest=/etc/sudoers regexp='flies ALL' line='flies ALL=(ALL) NOPASSWD: ALL' state=present"

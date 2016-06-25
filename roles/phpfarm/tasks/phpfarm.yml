@@ -1,0 +1,50 @@
+- name: "Compiling PHP {{ php.version }}"
+  shell: "./main.sh {{ php.version }}"
+  args:
+    chdir: /opt/phpfarm/src/
+    creates: "/opt/phpfarm/inst/php-{{ php.version }}/bin/php"
+
+- name: "Install php-fpm config {{ php.version }}"
+  template:
+    src: php-fpm.conf.j2
+    dest: "/opt/phpfarm/inst/php-{{ php.version }}/etc/php-fpm.conf"
+
+- name: "Created php-fpm pool directory {{ php.version }}"
+  file:
+    path: "/opt/phpfarm/inst/php-{{ php.version }}/etc/php-fpm.d"
+    state: directory
+
+- name: "Install php-fpm pool {{ php.version }}"
+  template:
+    src: php-fpm.pool.j2
+    dest: "/opt/phpfarm/inst/php-{{ php.version }}/etc/php-fpm.d/default-pool.conf"
+
+
+- name: "Install php-fpm init.d {{ php.version }}"
+  template:
+    src: php-fpm.init.d.j2
+    dest: "/etc/init.d/php-fpm-{{ php.version }}"
+    mode: 0755
+  notify:
+    - "reload systemd"
+    - "start php-fpms"
+
+- name: "Install php-fpm service {{ php.version }}"
+  template:
+    src: php-fpm.service.j2
+    dest: "/etc/systemd/system/php-fpm-{{ php.version }}.service"
+    mode: 0664
+  notify:
+    - "reload systemd"
+    - "start php-fpms"
+
+
+- shell: "/opt/phpfarm/inst/php-{{ php.version }}/bin/php-config --extension-dir"
+  register: extension_dir
+  changed_when: false
+
+- name: "compile php module {{ item }}"
+  include: phpmodule.yml
+  with_items: "{{ php.modules }}"
+  loop_control:
+    loop_var: module

@@ -1,0 +1,10 @@
+- name: reload systemd
+  command: systemctl daemon-reload
+
+- name: start php-fpms
+  service: name=php-fpm-{{ item.version }} state=started
+  with_items: "{{ php_versions }}"
+
+- name: restart php-fpms
+  service: name=php-fpm-{{ item.version }} state=restarted
+  with_items: "{{ php_versions }}"

@@ -1,0 +1,41 @@
+- file: path=/opt/phpfarm/src/{{ php.version }}/modules state=directory
+
+- unarchive:
+    src: "https://pecl.php.net/get/{{ module }}"
+    dest: /opt/phpfarm/src/{{ php.version }}/modules
+    copy: no
+    creates: /opt/phpfarm/src/{{ php.version }}/modules/{{ module }}
+    owner: root
+    group: root
+
+- shell: "mv /opt/phpfarm/src/{{ php.version }}/modules/{{ module }}-* /opt/phpfarm/src/{{ php.version }}/modules/{{ module }}"
+  args:
+    creates: "/opt/phpfarm/src/{{ php.version }}/modules/{{ module }}"
+
+- shell: ls -d /opt/phpfarm/src/{{ php.version }}/modules/{{ module }}
+  register: module_dir
+  changed_when: false
+
+#- stat:
+#    path: "{{ module_dir.stdout }}/Makefile"
+#  register: module_makefile
+#
+#- name: Clean {{ module }}
+#  shell: "cd {{ module_dir.stdout }} && make clean"
+#  when: module_makefile.stat.exists == True
+
+- name: Build {{ module }}
+  shell: "{{ item }}"
+  args:
+    chdir: "{{ module_dir.stdout }}"
+    creates: "{{ extension_dir.stdout }}/{{ module }}.so"
+  with_items:
+    - "/opt/phpfarm/inst/php-{{ php.version }}/bin/phpize"
+    - "./configure --with-php-config=/opt/phpfarm/inst/php-{{ php.version }}/bin/php-config"
+    - make
+    - make install
+  notify:
+    - restart php-fpms
+
+- name: Add {{ module }}
+  lineinfile: dest=/opt/phpfarm/inst/php-{{ php.version }}/etc/php.ini regexp="^extension={{ module }}\.so$" line="extension={{ module }}.so"

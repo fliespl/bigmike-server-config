@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>PHP List</title>
+</head>
+<body>
+<ul>
+{% for php in php_versions %}
+    <li><a href="/php/{{ php.version}}">PHP {{ php.version }}</a></li>
+{% endfor %}
+</ul>
+</body>
+</html>
+
+

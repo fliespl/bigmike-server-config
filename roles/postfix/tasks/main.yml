@@ -1,0 +1,153 @@
+- name: Set up Postfix to relay mail
+  debconf: name=postfix
+           question='{{ item.question }}'
+           value='{{ item.value }}'
+           vtype='{{ item.vtype }}'
+  with_items:
+    - { question: 'postfix/mailname', value: '{{ fqdn_domain }}', vtype: 'string' }
+    - { question: 'postfix/main_mailer_type', value: 'Internet Site', vtype: 'string' }
+
+
+- name: Install postfix
+  apt: name="{{item}}" state=installed
+  with_items:
+    - postfix
+    - postfix-mysql
+    - dovecot-imapd
+    - dovecot-pop3d
+    - dovecot-mysql
+    - dovecot-sieve
+    - postgrey
+    - clamav
+    - clamav-daemon
+    - spamassassin
+    - libdbi-perl
+    - libdbd-mysql-perl
+    - pyzor
+    - razor
+    - amavisd-new
+
+    # opcjonalnie
+    - libnet-dns-perl
+    - libmail-spf-perl
+    - libnet-ldap-perl
+    - libauthen-sasl-perl
+    - libio-string-perl
+    - libio-socket-ssl-perl
+    - libnet-ident-perl
+
+- name: Create postfix database
+  mysql_db: login_user=root login_password={{ mysql_root_password }} name={{ postfix_mysql_db }} state=present encoding=utf8
+
+- name: Check if postfix database empty
+  shell: /usr/bin/mysql -Bse "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = '{{ postfix_mysql_db }}';"
+  register: postfix_database_tables_count
+  changed_when: false
+
+- name: Import postfix schema
+  mysql_db: state=import name={{ postfix_mysql_db }} target=other/sql/postfix.sql
+  when: postfix_database_tables_count.stdout == "0"
+
+- name: Create postfix user
+  mysql_user: login_user=root login_password={{ mysql_root_password }} name={{ postfix_mysql_user }} password={{ postfix_mysql_pass }} priv="{{ postfix_mysql_db }}.*:ALL" state=present
+
+# useradd -r -u 150 -g mail -d /var/vmail -s /sbin/nologin -c "Virtual maildir handler" vmail
+- user: name=vmail uid=150 group=mail shell=/bin/nologin comment="Virtual maildir handler" home=/var/mail system=yes
+
+- file: path=/var/vmail state=directory owner=vmail group=mail mode=0770
+
+
+- name: "Dovecot Config"
+  template:
+    src: other.j2
+    dest: "/etc/dovecot/conf.d/100-dovecot.conf"
+
+- name: "Dovecot MySQL Config"
+  template:
+    src: mysql.j2
+    dest: "/etc/dovecot/dovecot-sql.conf.ext"
+
+- lineinfile: dest=/etc/dovecot/conf.d/10-auth.conf regexp="{{ item.regexp }}" line="{{ item.line }}"
+  with_items:
+    - { regexp: "^#?disable_plaintext_auth =", line: "disable_plaintext_auth = yes"}
+    - { regexp: "^#?auth_mechanisms =", line: "auth_mechanisms = plain login"}
+    - { regexp: "^#?!include auth-sql.conf.ext", line: "!include auth-sql.conf.ext"}
+    - { regexp: "^#?!include auth-system.conf.ext", line: "#!include auth-system.conf.ext"}
+
+- file: path=/etc/dovecot recurse=yes owner=vmail group=dovecot mode=0750
+
+#- file: path=/etc/dovecot/dovecot-sql.conf.ext owner=root group=root mode=0600
+
+- user: name=clamav groups=clamav,amavis
+
+- user: name=amavis groups=clamav,amavis
+
+- lineinfile: dest=/etc/clamav/clamd.conf regexp="AllowSupplementaryGroups " line="AllowSupplementaryGroups true"
+
+- name: "Amavis filters"
+  template:
+    src: amavis.j2
+    dest: "/etc/amavis/conf.d/15-content_filter_mode"
+
+
+- name: "Amavis local delivery setup"
+  template:
+    src: amavis-user.j2
+    dest: "/etc/amavis/conf.d/50-user"
+
+- template:
+    src: postfix/header_checks.j2
+    dest: "/etc/postfix/header_checks"
+
+- template:
+    src: postfix/mysql_virtual_alias_domainaliases_maps.j2
+    dest: "/etc/postfix/mysql_virtual_alias_domainaliases_maps.cf"
+
+- template:
+    src: postfix/mysql_virtual_alias_maps.j2
+    dest: "/etc/postfix/mysql_virtual_alias_maps.cf"
+
+- template:
+    src: postfix/mysql_virtual_domains_maps.j2
+    dest: "/etc/postfix/mysql_virtual_domains_maps.cf"
+
+- template:
+    src: postfix/mysql_virtual_mailbox_domainaliases_maps.j2
+    dest: "/etc/postfix/mysql_virtual_mailbox_domainaliases_maps.cf"
+
+- template:
+    src: postfix/mysql_virtual_mailbox_maps.j2
+    dest: "/etc/postfix/mysql_virtual_mailbox_maps.cf"
+
+- template:
+    src: postfix/mysql_virtual_sender_login_maps.j2
+    dest: "/etc/postfix/mysql_virtual_sender_login_maps.cf"
+
+- template:
+    src: postfix/main.j2
+    dest: "/etc/postfix/main.cf"
+
+- template:
+    src: postfix/master.j2
+    dest: "/etc/postfix/master.cf"
+
+# TODO: https://help.ubuntu.com/lts/serverguide/mail-filtering.html
+# TODO: https://www.digitalocean.com/community/tutorials/how-to-configure-a-mail-server-using-postfix-dovecot-mysql-and-spamassassin
+# TODO: https://wiki.gentoo.org/wiki/Complete_Virtual_Mail_Server/amvisd_spamassassin_clamav
+# TODO: https://www.exratione.com/2016/05/a-mailserver-on-ubuntu-16-04-postfix-dovecot-mysql/
+
+#submission inet
+
+
+- shell: freshclam
+
+
+- name: Restart postfix services
+  service: name={{ item }} state=restarted enabled=yes
+  with_items:
+    - postfix
+    - spamassassin
+    - clamav-daemon
+    - amavis
+    - dovecot
+

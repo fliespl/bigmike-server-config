@@ -1,0 +1,2 @@
+- name: Install varnish
+  apt: name=varnish state=installed

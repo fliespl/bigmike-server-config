@@ -1,0 +1,51 @@
+- stat: path=/opt/phpfarm/build.xml
+  register: phpfarm_file
+
+#- user: name=phpfarm createhome=no state=present
+
+#- group: name=phpfarm state=present
+      
+- git: repo=https://github.com/fpoirotte/phpfarm.git dest=/opt/phpfarm depth=1
+  when: phpfarm_file.stat.exists == False
+
+#- file: path=/opt/phpfarm owner=phpfarm group=phpfarm recurse=yes
+
+- name: Create phpfarm custom settings directory
+  file: path=/opt/phpfarm/custom state=directory
+
+- name: "Install phpfarm options"
+  template:
+    src: options.sh.j2
+    dest: "/opt/phpfarm/custom/options.sh"
+
+- name: "Install default php.ini"
+  template:
+    src: php.ini.j2
+    dest: "/opt/phpfarm/custom/php.ini"
+
+- name: "Install phpfarm options for php-5.5"
+  template:
+    src: options-5.5+.sh.j2
+    dest: "/opt/phpfarm/custom/options-5.5.sh"
+
+- name: "Install phpfarm options for php-5.6"
+  template:
+    src: options-5.5+.sh.j2
+    dest: "/opt/phpfarm/custom/options-5.6.sh"
+
+- name: "Install phpfarm options for php-7"
+  template:
+    src: options-5.5+.sh.j2
+    dest: "/opt/phpfarm/custom/options-7.sh"
+
+
+- name: compile php versions
+  include: phpfarm.yml
+  with_items: "{{ php_versions }}"
+  loop_control:
+    loop_var: php
+
+- command: /opt/phpfarm/inst/bin/switch-phpfarm {{ default_php }} creates=/opt/phpfarm/inst/current/bin/php
+- file: src=/opt/phpfarm/inst/current/bin/php dest=/usr/local/bin/php state=link
+
+- meta: flush_handlers

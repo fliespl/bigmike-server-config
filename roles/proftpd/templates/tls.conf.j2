@@ -1,0 +1,13 @@
+<IfModule mod_tls.c>
+TLSEngine                  on
+TLSLog                     /var/log/proftpd/tls.log
+TLSProtocol TLSv1.2
+TLSCipherSuite AES128+EECDH:AES128+EDH
+TLSOptions                 NoCertRequest AllowClientRenegotiations
+TLSRSACertificateFile      /etc/letsencrypt/live/{{ server_domain }}/cert.pem
+TLSRSACertificateKeyFile   /etc/letsencrypt/live/{{ server_domain }}/privkey.pem
+TLSCACertificateFile       /etc/letsencrypt/live/{{ server_domain }}/chain.pem
+TLSVerifyClient            off
+TLSRequired                on
+RequireValidShell          no
+</IfModule>

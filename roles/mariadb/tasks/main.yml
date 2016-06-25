@@ -1,0 +1,26 @@
+- name: Check if mariadb is installed
+  command: "dpkg -s mariadb-server-10.0"
+  register: mariadb_check
+  ignore_errors: yes
+  failed_when: false
+  changed_when: false
+
+- name: Preset mariadb password
+  debconf: name=mariadb-server-10.0
+           question='{{ item.question }}'
+           value='{{ item.value }}'
+           vtype='{{ item.vtype }}'
+  with_items:
+    - { question: 'mysql-server/root_password', value: '{{ mysql_root_password }}', vtype: 'password' }
+    - { question: 'mysql-server/root_password_again', value: '{{ mysql_root_password }}', vtype: 'password' }
+  when: mariadb_check.stdout.find('install ok installed') == -1
+
+- name: Install mariadb
+  apt: name="{{item}}" state=installed
+  with_items:
+  - mariadb-client
+  - mariadb-server
+  - python-mysqldb
+
+- name: restart mysql
+  service: name=mysql state=restarted

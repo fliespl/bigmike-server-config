@@ -1,0 +1,21 @@
+---
+# This playbook deploys the whole application stack in this site.
+
+- name: apply common configuration
+  hosts: all
+  vars_files:
+    - vars/main.yml
+  roles:
+    - basic
+    - mariadb
+    - powerdns
+    - letsencrypt
+    - proftpd
+    - nginx
+    - varnish
+    - postfix
+    - phpfarm
+    - firewall
+    - fail2ban
+    - logwatch
+    - secure

@@ -1,0 +1,8 @@
+user = {{ postfix_mysql_user }}
+password = {{ postfix_mysql_pass }}
+hosts = 127.0.0.1
+dbname = {{ postfix_mysql_db }}
+query = SELECT goto FROM alias,alias_domain
+  WHERE alias_domain.alias_domain = '%d'
+  AND alias.address=concat('%u', '@', alias_domain.target_domain)
+  AND alias.active = 1

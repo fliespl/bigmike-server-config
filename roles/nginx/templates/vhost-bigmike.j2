@@ -1,0 +1,62 @@
+server {
+    server_name www.{{ server_domain }};
+    return 301 $scheme://{{ server_domain }}$request_uri;
+}
+
+server {
+    listen 80;
+    server_name {{ server_domain }};
+    return 301 https://$server_name$request_uri;
+}
+
+server {
+    listen       443 ssl;
+    server_name {{ server_domain }} www.{{ server_domain }};
+
+    root   {{ main_vhost_htdocs }};
+
+    include global/restrictions.conf;
+    include global/ssl-params.conf;
+
+    ssl_certificate /etc/letsencrypt/live/{{ server_domain }}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/{{ server_domain }}/privkey.pem;
+
+    access_log {{ main_vhost_logs }}/access.log;
+    error_log {{ main_vhost_logs }}/error.log;
+
+    # deny everything that doesn't match another location
+    location / { deny all; }
+
+    # allow loading /index.php
+    location /php {
+        include global/admin-only-access.conf;
+
+        index index.html;
+
+        location /php/index.html { }
+
+
+         {% for php in php_versions %}
+             location = /php/{{ php.version }} {
+                 fastcgi_pass unix:/opt/phpfarm/inst/php-{{ php.version }}/var/run/php-fpm.sock;
+                 fastcgi_param  SCRIPT_FILENAME  {{ main_vhost_htdocs }}/php/info.php;
+                 include        fastcgi_params;
+             }
+         {% endfor %}
+    }
+
+    location ~ ^/(phpmyadmin|postfixadmin) {
+        include global/admin-only-access.conf;
+
+        index index.php;
+
+        location ~ ^/(.+\.php)$ {
+            try_files $uri =404;
+            fastcgi_split_path_info ^(.+\.php)(/.+)$;
+            fastcgi_pass unix:/opt/phpfarm/inst/php-{{ default_php }}/var/run/php-fpm.sock;
+            fastcgi_index  index.php;
+            fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+            include        fastcgi_params;
+        }
+    }
+}

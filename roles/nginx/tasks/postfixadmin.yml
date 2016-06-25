@@ -1,0 +1,20 @@
+- name: Prepare postfixadmin
+  unarchive:
+    src: http://downloads.sourceforge.net/project/postfixadmin/postfixadmin/postfixadmin-2.93/postfixadmin-2.93.tar.gz?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fpostfixadmin%2Ffiles%2Fpostfixadmin%2Fpostfixadmin-2.93%2F&ts=1466165928&use_mirror=netcologne
+    dest: /tmp
+    copy: no
+    creates: /tmp/postfixadmin-2.93
+    owner: root
+    group: root
+
+- name: Move postfixadmin
+  command: creates="{{ main_vhost_htdocs }}/postfixadmin" mv /tmp/postfixadmin-2.93 {{ main_vhost_htdocs }}/postfixadmin
+
+- file: path={{ main_vhost_htdocs }}/postfixadmin/templates_c state=directory owner=www-data group=www-data # mode=0775
+
+- file: path={{ main_vhost_htdocs }}/postfixadmin/setup.php state=absent
+
+- name: copy postfixadmin config
+  template:
+    src: postfixadmin.config.php.j2
+    dest: "{{ main_vhost_htdocs }}/postfixadmin/config.local.php"

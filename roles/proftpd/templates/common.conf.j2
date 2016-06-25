@@ -1,0 +1,7 @@
+PassivePorts 50000 51000
+LoadModule mod_sql.c
+LoadModule mod_sql_mysql.c
+RequireValidShell         off
+DefaultRoot			~
+AuthOrder			mod_sql.c
+AuthPAM off

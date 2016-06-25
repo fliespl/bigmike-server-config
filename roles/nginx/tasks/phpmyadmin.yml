@@ -1,0 +1,16 @@
+- name: Prepare PMA
+  unarchive:
+    src: https://files.phpmyadmin.net/phpMyAdmin/4.6.2/phpMyAdmin-4.6.2-all-languages.tar.bz2
+    dest: /tmp
+    copy: no
+    creates: /tmp/phpMyAdmin-4.6.2-all-languages
+    owner: root
+    group: root
+
+- name: Move PMA
+  command: creates="{{ main_vhost_htdocs }}/phpmyadmin" mv /tmp/phpMyAdmin-4.6.2-all-languages {{ main_vhost_htdocs }}/phpmyadmin
+
+- name: copy phpmyadmin config
+  template:
+    src: phpmyadmin.config.php.j2
+    dest: "{{ main_vhost_htdocs }}/phpmyadmin/config.inc.php"

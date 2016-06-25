@@ -1,0 +1,11 @@
+# TODO: add more rules
+
+#[dovecot]
+#enabled = true
+
+
+[proftpd]
+enabled = true
+port = ftp,ftp-data,ftps,ftps-data
+filter = proftpd
+logpath = /var/log/proftpd/proftpd.log

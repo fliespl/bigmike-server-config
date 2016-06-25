@@ -1,0 +1,31 @@
+- name: Prepare roundcube
+  unarchive:
+    src: https://github.com/roundcube/roundcubemail/releases/download/1.2.0/roundcubemail-1.2.0-complete.tar.gz
+    dest: /tmp
+    copy: no
+    creates: /tmp/roundcubemail-1.2.0
+    owner: root
+    group: root
+
+- name: Copy roundcube
+  command: creates="{{ mail_vhost_htdocs }}/robots.txt" cp -R /tmp/roundcubemail-1.2.0/. {{ mail_vhost_htdocs }}
+
+- name: copy roundcube config
+  template:
+    src: roundcube.config.php.j2
+    dest: "{{ mail_vhost_htdocs }}/config/config.inc.php"
+
+- name: Create roundcube database
+  mysql_db: login_user=root login_password={{ mysql_root_password }} name={{ roundcube_mysql_db }} state=present encoding=utf8
+
+- name: Check if roundcube database empty
+  shell: /usr/bin/mysql -Bse "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = '{{ roundcube_mysql_db }}';"
+  register: roundcube_database_tables_count
+  changed_when: false
+
+- name: Import roundcube schema
+  mysql_db: state=import name={{ roundcube_mysql_db }} target={{ mail_vhost_htdocs }}/SQL/mysql.initial.sql
+  when: roundcube_database_tables_count.stdout == "0"
+
+- name: Create roundcube user
+  mysql_user: login_user=root login_password={{ mysql_root_password }} name={{ roundcube_mysql_user }} password={{ roundcube_mysql_pass }} priv="{{ roundcube_mysql_db }}.*:ALL" state=present

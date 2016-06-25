@@ -1,0 +1,39 @@
+- name: Install proftpd
+  apt: name=proftpd-basic state=installed
+
+- name: Install proftpd mysql backend
+  apt: name=proftpd-mod-mysql state=installed
+
+- name: Setup ProFTPd common
+  template:
+    src: common.conf.j2
+    dest: "/etc/proftpd/conf.d/common.conf"
+
+
+- name: Create proftpd database
+  mysql_db: login_user=root login_password={{ mysql_root_password }} name={{ proftpd_mysql_db }} state=present encoding=utf8
+
+- name: Check if proftpd database empty
+  shell: /usr/bin/mysql -Bse "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = '{{ proftpd_mysql_db }}';"
+  register: proftpd_database_tables_count
+  changed_when: false
+
+- name: Import proftpd schema
+  mysql_db: state=import name={{ proftpd_mysql_db }} target=other/sql/proftpd.sql
+  when: proftpd_database_tables_count.stdout == "0"
+
+- name: Create proftpd user
+  mysql_user: login_user=root login_password={{ mysql_root_password }} name={{ proftpd_mysql_user }} password={{ proftpd_mysql_pass }} priv="{{ proftpd_mysql_db }}.*:ALL" state=present
+
+- name: Setup ProFTPd MySQL
+  template:
+    src: mysql.conf.j2
+    dest: "/etc/proftpd/conf.d/mysql.conf"
+
+- name: Setup ProFTPd TLS
+  template:
+    src: tls.conf.j2
+    dest: "/etc/proftpd/conf.d/tls.conf"
+
+- name: restart proftpd
+  service: name=proftpd state=restarted

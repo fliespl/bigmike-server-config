@@ -1,0 +1,12 @@
+[Unit]
+Description=The PHP FastCGI Process Manager {{ php.version }}
+After=syslog.target network.target
+
+[Service]
+Type=simple
+PIDFile=/opt/phpfarm/inst/php-{{ php.version }}/var/run/php-fpm.pid
+ExecStart=/opt/phpfarm/inst/php-{{ php.version }}/sbin/php-fpm --nodaemonize --fpm-config /opt/phpfarm/inst/php-{{ php.version }}/etc/php-fpm.conf
+ExecReload=/bin/kill -USR2 $MAINPID
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,8 @@
+user = {{ postfix_mysql_user }}
+password = {{ postfix_mysql_pass }}
+hosts = 127.0.0.1
+dbname = {{ postfix_mysql_db }}
+table = alias
+select_field = goto
+where_field = address
+additional_conditions = and active = '1'

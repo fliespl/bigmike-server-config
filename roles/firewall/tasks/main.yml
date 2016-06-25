@@ -1,0 +1,28 @@
+- name: Install firewall
+  apt: name=ufw state=installed
+
+- name: Open firewall ports traffic
+  ufw: rule=allow port="{{ item.port }}" proto="{{ item.proto }}"
+  with_items:
+  - { proto: tcp, port: 21 }
+  - { proto: tcp, port: 22 }
+  - { proto: any, port: 25 }
+  - { proto: any, port: 53 }
+  - { proto: tcp, port: 80 }
+  - { proto: any, port: 110 }
+  - { proto: any, port: 143 }
+  - { proto: any, port: 993 }
+  - { proto: any, port: 995 }
+  - { proto: any, port: 465 }
+  - { proto: tcp, port: 443 }
+  notify: Restart firewall
+
+- name: Open pasv ports tcp
+  ufw: rule=allow proto=tcp port=50000:51000
+
+- name: Open pasv ports udp
+  ufw: rule=allow proto=udp port=50000:51000
+
+- name: Setup ufw
+  ufw: state=enabled policy=deny
+  notify: Restart firewall

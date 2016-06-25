@@ -1,0 +1,78 @@
+- name: Install nginx
+  apt: name=nginx state=installed
+
+- set_fact:
+    main_vhost_htdocs: "/var/www/{{ server_domain }}/htdocs"
+    main_vhost_logs: "/var/www/{{ server_domain }}/logs"
+    mail_vhost_htdocs: "/var/www/mail.{{ server_domain }}/htdocs"
+    mail_vhost_logs: "/var/www/mail.{{ server_domain }}/logs"
+
+
+# TODO: https://www.digitalocean.com/community/tutorials/how-to-optimize-nginx-configuration
+
+- command: sudo openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048 creates=/etc/ssl/certs/dhparam.pem
+
+- file: path=/etc/nginx/sites-enabled/default state=absent
+
+- file: path=/var/www/html state=absent
+
+- file: path=/etc/nginx/snippets state=absent
+
+- file: path=/etc/nginx/global src={{ playbook_dir }}/roles/nginx/snippets state=link
+
+- file: path={{ main_vhost_logs }} state=directory
+- file: path={{ main_vhost_htdocs }} state=directory
+- file: path={{ main_vhost_htdocs }}/php state=directory
+
+- name: Prepare list of php versions
+  template:
+    src: index.j2
+    dest: "{{ main_vhost_htdocs }}/php/index.html"
+
+- name: Prepare info.php
+  template:
+    src: info.php.j2
+    dest: "{{ main_vhost_htdocs }}/php/info.php"
+
+
+- name: prepare upstreams
+  template:
+    src: upstreams.j2
+    dest: "/etc/nginx/conf.d/upstreams.conf"
+  notify: restart nginx
+
+- name: setup logrotate
+  template:
+    src: logrotate.conf.j2
+    dest: "/etc/logrotate.d/nginx-vhosts"
+
+- name: prepare empty vhosts
+  template:
+    src: empty.j2
+    dest: "/etc/nginx/sites-enabled/default-vhost"
+  notify: restart nginx
+
+- name: "setup {{ server_domain }}"
+  template:
+    src: vhost-bigmike.j2
+    dest: "/etc/nginx/sites-enabled/{{ server_domain }}"
+  notify: restart nginx
+
+- name: "setup mail.{{ server_domain }}"
+  template:
+    src: vhost-mail.j2
+    dest: "/etc/nginx/sites-enabled/mail.{{ server_domain }}"
+  notify: restart nginx
+
+
+- file: path={{ mail_vhost_logs }} state=directory
+- file: path={{ mail_vhost_htdocs }} state=directory
+
+
+- name: Setup roundcube
+  include: roundcube.yml
+
+- include: postfixadmin.yml
+- include: phpmyadmin.yml
+
+- meta: flush_handlers
