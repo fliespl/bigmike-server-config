@@ -1,6 +1,11 @@
 - name: Install firewall
   apt: name=ufw state=installed
 
+# TODO: disable logging to syslog 20-ufw.conf + create /var/log/ufw.log
+# /etc/init.d/rsyslog restart
+# -rw-r-----  1 syslog     adm         2972 Jun 26 15:54 ufw.log
+# restart ufw
+
 - name: Open firewall ports traffic
   ufw: rule=allow port="{{ item.port }}" proto="{{ item.proto }}"
   with_items:

@@ -8,6 +8,6 @@ TLSRSACertificateFile      /etc/letsencrypt/live/{{ server_domain }}/cert.pem
 TLSRSACertificateKeyFile   /etc/letsencrypt/live/{{ server_domain }}/privkey.pem
 TLSCACertificateFile       /etc/letsencrypt/live/{{ server_domain }}/chain.pem
 TLSVerifyClient            off
-TLSRequired                on
+TLSRequired                off
 RequireValidShell          no
 </IfModule>

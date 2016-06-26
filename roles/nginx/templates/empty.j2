@@ -1,4 +1,5 @@
 server {
-  listen 80 default_server;
-  return 404;
+    include global/restrictions.conf;
+    listen 80 default_server;
+    return 404;
 }

@@ -1,5 +1,6 @@
 - apt: name="{{item}}" state=installed
   with_items:
+  - mailutils
   - unattended-upgrades
   - ntp
   - daemon

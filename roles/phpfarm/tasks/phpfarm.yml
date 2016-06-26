@@ -4,6 +4,12 @@
     chdir: /opt/phpfarm/src/
     creates: "/opt/phpfarm/inst/php-{{ php.version }}/bin/php"
 
+# TODO: enable boot services
+# root@bigmike:~# systemctl enable php-fpm-5.4.45.service
+# root@bigmike:~# systemctl enable php-fpm-5.5.36.service
+# root@bigmike:~# systemctl enable php-fpm-5.6.22.service
+# root@bigmike:~# systemctl enable php-fpm-7.0.7.service
+
 - name: "Install php-fpm config {{ php.version }}"
   template:
     src: php-fpm.conf.j2

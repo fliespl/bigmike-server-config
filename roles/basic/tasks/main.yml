@@ -40,7 +40,7 @@
   group: name=admin state=present
 
 - name: Add admin users
-  user: name="{{ item }}" shell=/bin/bash group=admin
+  user: name="{{ item }}" shell=/bin/bash groups=admin
   with_items:
   - flies
   - japcok

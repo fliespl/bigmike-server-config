@@ -1,3 +1,5 @@
+# TODO: uninstall bind9
+
 - name: Install pdns
   apt: name=pdns-server state=installed
 
@@ -7,7 +9,7 @@
 - name: Set pdns config
   lineinfile: dest=/etc/powerdns/pdns.d/pdns.local.conf regexp="{{ item.regexp }}" line="{{ item.line }}"
   with_items:
-    - { regexp: ^allow-axfr-ips=, line: "allow-axfr-ips=213.186.33.199"}
+    - { regexp: ^allow-axfr-ips=, line: "allow-axfr-ips=213.186.33.199,178.33.234.135"}
     - { regexp: ^allow-recursion=, line: "allow-recursion=0.0.0.0/0"}
 
 - name: Create pdns database
