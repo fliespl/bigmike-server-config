@@ -24,3 +24,6 @@
 - name: start nginx
   service: name=nginx state=started
   when: nginx_check.stdout.find('install ok installed') != -1
+
+
+- cron: name="Check certificates" minute="0" hour="2" job="letsencrypt renew --webroot --webroot-path=/tmp/letsencrypt-auto --agree-tos > /tmp/letsencrypt-auto/status.log"
