@@ -25,8 +25,9 @@ server {
     access_log {{ main_vhost_logs }}/access.log;
     error_log {{ main_vhost_logs }}/error.log;
 
-    # deny everything that doesn't match another location
-    location / { deny all; }
+    location / {
+        index index.html;
+    }
 
     # allow loading /index.php
     location /php {
