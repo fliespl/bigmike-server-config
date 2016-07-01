@@ -140,6 +140,7 @@
 
 
 - shell: freshclam
+  ignore_errors: yes
 
 
 - name: Restart postfix services
