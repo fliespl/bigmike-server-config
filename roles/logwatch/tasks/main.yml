@@ -17,7 +17,7 @@
 
 - name: Logwatch http conf
   template:
-      src: logfiles.http.j2
+      src: logfiles/http.j2
       dest: "/etc/logwatch/conf/logfiles/http.conf"
 
 - name: Logwatch ignore conf
