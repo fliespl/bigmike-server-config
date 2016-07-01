@@ -11,7 +11,7 @@ server {
     index index.php index.html index.htm;
 
     include global/letsencrypt.conf;
-    include global/restrictions.conf;
+    include global/restrictions/global.conf;
     include global/ssl-params.conf;
 
     ssl_certificate /etc/letsencrypt/live/{{ server_domain }}/fullchain.pem;
