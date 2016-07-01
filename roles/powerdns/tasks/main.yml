@@ -1,4 +1,5 @@
-# TODO: uninstall bind9
+- name: Uninstall bind9
+  apt: name=bind9 state=absent
 
 - name: Install pdns
   apt: name=pdns-server state=installed

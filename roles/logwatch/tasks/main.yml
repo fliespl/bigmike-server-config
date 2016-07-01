@@ -1,6 +1,12 @@
 - name: Install logwatch
   apt: name=logwatch state=installed
 
+- name: Create directories
+  file: path={{ item }} state=directory
+  with_items:
+  - /etc/logwatch/conf
+  - /etc/logwatch/conf/logfiles
+
 - name: Email log summary daily
   lineinfile:
     dest: /etc/cron.daily/00logwatch
@@ -8,6 +14,16 @@
     line: '/usr/sbin/logwatch --output mail --mailto {{ admin1_mail }},{{ admin2_mail }} --detail high'
     state: present
     create: yes
+
+- name: Logwatch http conf
+  template:
+      src: logfiles.http.j2
+      dest: "/etc/logwatch/conf/logfiles/http.conf"
+
+- name: Logwatch ignore conf
+  template:
+      src: ignore.j2
+      dest: "/etc/logwatch/conf/ignore.conf"
 
 - name: Logwatch config
   template:

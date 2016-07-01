@@ -17,7 +17,7 @@ server {
     ssl_certificate /etc/letsencrypt/live/{{ server_domain }}/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/{{ server_domain }}/privkey.pem;
 
-    access_log {{ mail_vhost_logs }}/access.log;
+    access_log {{ mail_vhost_logs }}/access.log vhosts;
     error_log {{ mail_vhost_logs }}/error.log;
 
     location / {

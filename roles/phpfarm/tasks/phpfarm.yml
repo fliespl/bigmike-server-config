@@ -4,12 +4,6 @@
     chdir: /opt/phpfarm/src/
     creates: "/opt/phpfarm/inst/php-{{ php.version }}/bin/php"
 
-# TODO: enable boot services
-# root@bigmike:~# systemctl enable php-fpm-5.4.45.service
-# root@bigmike:~# systemctl enable php-fpm-5.5.36.service
-# root@bigmike:~# systemctl enable php-fpm-5.6.22.service
-# root@bigmike:~# systemctl enable php-fpm-7.0.7.service
-
 - name: "Install php-fpm config {{ php.version }}"
   template:
     src: php-fpm.conf.j2
@@ -44,6 +38,8 @@
     - "reload systemd"
     - "start php-fpms"
 
+- name: "Enable php-fpm-{{ php.version }} on boot"
+  service: name="php-fpm-{{ php.version }}" enabled=yes
 
 - shell: "/opt/phpfarm/inst/php-{{ php.version }}/bin/php-config --extension-dir"
   register: extension_dir

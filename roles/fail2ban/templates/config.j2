@@ -1,8 +1,20 @@
-# TODO: add more rules
+[postfix]
+enabled = true
+port = smtp,ssmtp,submission
+filter = postfix
+logpath = /var/log/mail.log
 
-#[dovecot]
-#enabled = true
+[sasl]
+enabled = true
+port = smtp,ssmtp,submission,imap2,imap3,imaps,pop3,pop3s
+filter = postfix-sasl
+logpath = /var/log/mail.log
 
+[dovecot]
+enabled = true
+port = smtp,ssmtp,submission,imap2,imap3,imaps,pop3,pop3s
+filter = dovecot
+logpath = /var/log/mail.log
 
 [proftpd]
 enabled = true
