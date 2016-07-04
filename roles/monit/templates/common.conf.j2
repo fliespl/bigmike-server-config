@@ -3,14 +3,42 @@ set alert {{ admin1_mail }} not on { instance, action }
 set alert {{ admin2_mail }} not on { instance, action }
 
 check file dead-mans-switch with path /.nonexistent
-  alert {{ admin1_mail }} with reminder on 500 cycles
-  alert {{ admin2_mail }} with reminder on 500 cycles
+    alert {{ admin1_mail }} with reminder on 500 cycles
+    alert {{ admin2_mail }} with reminder on 500 cycles
+
+set httpd port 2812 and
+    use address localhost
+    allow localhost
 
 check system localhost
-  if loadavg (1min) > 4 then alert
-  if loadavg (5min) > 2 then alert
-  if memory usage > 75% then alert
-  if swap usage > 25% then alert
-  if cpu usage (user) > 70% then alert
-  if cpu usage (system) > 30% then alert
-  if cpu usage (wait) > 20% then alert
+    if loadavg (1min) > 4 then alert
+    if loadavg (5min) > 2 then alert
+    if memory usage > 75% then alert
+    if swap usage > 25% then alert
+    if cpu usage (user) > 70% then alert
+    if cpu usage (system) > 30% then alert
+    if cpu usage (wait) > 20% then alert
+
+check process syslogd with pidfile /var/run/rsyslogd.pid
+    start program = "/bin/systemctl start rsyslog.service"
+    stop program = "/bin/systemctl stop rsyslog.service"
+
+check process sshd with pidfile /var/run/sshd.pid
+    start program  "/bin/systemctl start sshd.service"
+    stop program  "/bin/systemctl stop sshd.service"
+    if failed port 22 protocol ssh then restart
+
+check process mysql with pidfile /var/run/mysqld/mysqld.pid
+    start program = "/bin/systemctl start mysql.service"
+    stop program = "/bin/systemctl stop mysql.service"
+
+check process nginx with pidfile /var/run/nginx.pid
+    start program = "/etc/init.d/nginx start"
+    stop program  = "/etc/init.d/nginx stop"
+    group www-data
+
+{% for php in php_versions %}
+check process php-fpm-{{ php.version }} with pidfile /opt/phpfarm/inst-{{ php.version }}/var/run/php-fpm.pid
+    start program = "/bin/systemctl start php-fpm-{{ php.version }}.service"
+    stop program = "/bin/systemctl stop php-fpm-{{ php.version }}.service"
+{% endfor %}

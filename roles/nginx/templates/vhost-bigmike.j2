@@ -37,14 +37,22 @@ server {
 
         location /php/index.html { }
 
+        {% for php in php_versions %}
+        location = /php/{{ php.version }} {
+            fastcgi_pass unix:/opt/phpfarm/inst/php-{{ php.version }}/var/run/php-fpm.sock;
+            fastcgi_param  SCRIPT_FILENAME  {{ main_vhost_htdocs }}/php/info.php;
+            include        fastcgi_params;
+        }
+        {% endfor %}
+    }
 
-         {% for php in php_versions %}
-             location = /php/{{ php.version }} {
-                 fastcgi_pass unix:/opt/phpfarm/inst/php-{{ php.version }}/var/run/php-fpm.sock;
-                 fastcgi_param  SCRIPT_FILENAME  {{ main_vhost_htdocs }}/php/info.php;
-                 include        fastcgi_params;
-             }
-         {% endfor %}
+    location /monit/ {
+        include global/admin-only-access.conf;
+
+        rewrite ^/monit/(.*) /$1 break;
+        proxy_ignore_client_abort on;
+        proxy_pass   http://127.0.0.1:2812;
+        proxy_redirect  http://127.0.0.1:2812 /monit;
     }
 
     location ~ ^/(phpmyadmin|postfixadmin) {
