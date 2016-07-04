@@ -7,7 +7,6 @@
     mail_vhost_htdocs: "/var/www/mail.{{ server_domain }}/htdocs"
     mail_vhost_logs: "/var/www/mail.{{ server_domain }}/logs"
 
-# TODO: dopisac client_max_body_size 8M;
 # TODO: https://www.digitalocean.com/community/tutorials/how-to-optimize-nginx-configuration
 
 - command: sudo openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048 creates=/etc/ssl/certs/dhparam.pem

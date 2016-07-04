@@ -32,7 +32,7 @@
 
 - name: Logwatch services config
   template:
-      src: services.j2
+      src: services/http.conf.j2
       dest: "/etc/logwatch/conf/services/http.conf"
 
 - name: Change file mode
