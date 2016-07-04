@@ -8,6 +8,9 @@
   template:
     src: php-fpm.conf.j2
     dest: "/opt/phpfarm/inst/php-{{ php.version }}/etc/php-fpm.conf"
+  notify:
+    - "reload systemd"
+    - "start php-fpms"
 
 - name: "Created php-fpm pool directory {{ php.version }}"
   file:
