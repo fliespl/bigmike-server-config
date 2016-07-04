@@ -38,7 +38,7 @@ check process nginx with pidfile /var/run/nginx.pid
     group www-data
 
 {% for php in php_versions %}
-check process php-fpm-{{ php.version }} with pidfile /opt/phpfarm/inst-{{ php.version }}/var/run/php-fpm.pid
+check process php-fpm-{{ php.version }} with pidfile /opt/phpfarm/inst/php-{{ php.version }}/var/run/php-fpm.pid
     start program = "/bin/systemctl start php-fpm-{{ php.version }}.service"
     stop program = "/bin/systemctl stop php-fpm-{{ php.version }}.service"
 {% endfor %}
