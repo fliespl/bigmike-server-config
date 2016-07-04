@@ -19,9 +19,29 @@ check system localhost
     if cpu usage (system) > 30% then alert
     if cpu usage (wait) > 20% then alert
 
+check process cron with pidfile /var/run/crond.pid
+    start program = "/bin/systemctl start cron.service"
+    stop program = "/bin/systemctl stop cron.service"
+
+check process ntp with pidfile /var/run/ntpd.pid
+    start program = "/bin/systemctl start ntd.service"
+    stop program = "/bin/systemctl stop ntd.service"
+
+check process pdns with pidfile /var/run/pdns.pid
+    start program = "/bin/systemctl start pdns.service"
+    stop program = "/bin/systemctl stop pdns.service"
+
+check process proftpd with pidfile /var/run/proftpd.pid
+    start program = "/bin/systemctl start proftpd.service"
+    stop program = "/bin/systemctl stop proftpd.service"
+
 check process syslogd with pidfile /var/run/rsyslogd.pid
     start program = "/bin/systemctl start rsyslog.service"
     stop program = "/bin/systemctl stop rsyslog.service"
+
+check process spamassassin with pidfile /var/run/spamassassin.pid
+    start program = "/bin/systemctl start spamassassin.service"
+    stop program = "/bin/systemctl stop spamassassin.service"
 
 check process sshd with pidfile /var/run/sshd.pid
     start program  "/bin/systemctl start sshd.service"
