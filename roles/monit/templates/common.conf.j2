@@ -53,8 +53,8 @@ check process mysql with pidfile /var/run/mysqld/mysqld.pid
     stop program = "/bin/systemctl stop mysql.service"
 
 check process nginx with pidfile /var/run/nginx.pid
-    start program = "/etc/init.d/nginx start"
-    stop program  = "/etc/init.d/nginx stop"
+    start program = "/bin/systemctl start nginx.service"
+    stop program  = "/bin/systemctl stop nginx.service"
 
 {% for php in php_versions %}
 check process php-fpm-{{ php.version }} with pidfile /opt/phpfarm/inst/php-{{ php.version }}/var/run/php-fpm.pid
