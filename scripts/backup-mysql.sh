@@ -5,7 +5,6 @@ BACKUP="/backups"
 BACKUPDIR="$BACKUP/$TIMESTAMP"
 MYSQL_USER="root"
 MYSQL=/usr/bin/mysql
-MYSQL_PASSWORD=""
 MYSQLDUMP=/usr/bin/mysqldump
 AGE=7
 
@@ -21,16 +20,16 @@ if [ -z "`/usr/sbin/service mysql status | grep 'Active: active (running)'`" ] ;
 	exit 1
 fi
 
-if ! `echo 'exit' | $MYSQL -s --user=$MYSQL_USER -p$MYSQL_PASSWORD` ; then
+if ! `echo 'exit' | $MYSQL -s --user=$MYSQL_USER` ; then
 	echo "HALTED: Supplied mysql username or password appears to be incorrect (not copied here for security, see script)"  >&2
 	exit 1
 fi
 
-databases=`$MYSQL --user=$MYSQL_USER -p$MYSQL_PASSWORD -e "SHOW DATABASES;" | grep -Ev "(Database|information_schema|performance_schema)"`
+databases=`$MYSQL --user=$MYSQL_USER -e "SHOW DATABASES;" | grep -Ev "(Database|information_schema|performance_schema)"`
 
 for db in $databases; do
   # echo "backup started: $db"
-  $MYSQLDUMP --force --opt --events --ignore-table=mysql.event --user=$MYSQL_USER -p$MYSQL_PASSWORD --databases $db | gzip > "$BACKUPDIR/$db.gz"
+  $MYSQLDUMP --force --opt --events --ignore-table=mysql.event --user=$MYSQL_USER --databases $db | gzip > "$BACKUPDIR/$db.gz"
   # echo "backup finished: $db"
 done
 
