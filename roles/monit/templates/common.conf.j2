@@ -1,4 +1,8 @@
 set mailserver localhost
+set mail-format {
+    from: admin@{{ server_domain}}
+    subject: BigMike - monit alert --  $EVENT $SERVICE
+}
 set alert {{ admin1_mail }} not on { instance, action }
 set alert {{ admin2_mail }} not on { instance, action }
 
