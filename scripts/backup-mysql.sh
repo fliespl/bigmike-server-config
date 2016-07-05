@@ -16,7 +16,7 @@ if [ ! -d $BACKUPDIR ]; then
 	exit 1
 fi
 
-if [ -z "`/usr/sbin/service mysql status | grep 'Uptime:'`" ] ; then
+if [ -z "`/usr/sbin/service mysql status | grep 'Active: active (running)'`" ] ; then
 	echo "HALTED: MySQL does not appear to be running."  >&2
 	exit 1
 fi
