@@ -1,7 +1,7 @@
 #!/bin/bash
 
 TIMESTAMP=$(date +"%F")
-BACKUP="/backups"
+BACKUP="/var/backups/mysql"
 BACKUPDIR="$BACKUP/$TIMESTAMP"
 MYSQL_USER="root"
 MYSQL=/usr/bin/mysql
@@ -28,9 +28,7 @@ fi
 databases=`$MYSQL --user=$MYSQL_USER -e "SHOW DATABASES;" | grep -Ev "(Database|information_schema|performance_schema)"`
 
 for db in $databases; do
-  # echo "backup started: $db"
   $MYSQLDUMP --force --opt --events --ignore-table=mysql.event --user=$MYSQL_USER --databases $db | gzip > "$BACKUPDIR/$db.gz"
-  # echo "backup finished: $db"
 done
 
 tar -zcf $BACKUPDIR.tar.gz -C $BACKUP $TIMESTAMP
