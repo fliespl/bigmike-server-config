@@ -31,7 +31,9 @@
 
 - apt_key: id=CBC8B383 url=https://repo.powerdns.com/CBC8B383-pub.asc state=present
 
-- copy: src=pin.j2 dest=/etc/apt/preferences.d/pdns
+- template:
+    src: pin.j2
+    dest: /etc/apt/preferences.d/pdns
 
 - name: Install required packages
   include: packages.yml
