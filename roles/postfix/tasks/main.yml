@@ -131,17 +131,8 @@
     src: postfix/master.j2
     dest: "/etc/postfix/master.cf"
 
-# TODO: https://help.ubuntu.com/lts/serverguide/mail-filtering.html
-# TODO: https://www.digitalocean.com/community/tutorials/how-to-configure-a-mail-server-using-postfix-dovecot-mysql-and-spamassassin
-# TODO: https://wiki.gentoo.org/wiki/Complete_Virtual_Mail_Server/amvisd_spamassassin_clamav
-# TODO: https://www.exratione.com/2016/05/a-mailserver-on-ubuntu-16-04-postfix-dovecot-mysql/
-
-#submission inet
-
-
 - shell: freshclam
   ignore_errors: yes
-
 
 - name: Restart postfix services
   service: name={{ item }} state=restarted enabled=yes
