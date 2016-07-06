@@ -1,6 +1,10 @@
 - name: Uninstall bind9
   apt: name=bind9 state=absent
 
+- apt_repository: repo='deb http://repo.powerdns.com/ubuntu xenial-auth-master main' state=present filename='pdns'
+- apt_key: id=CBC8B383 url=https://repo.powerdns.com/CBC8B383-pub.asc state=present
+
+
 - name: Install pdns
   apt: name=pdns-server state=installed
 
