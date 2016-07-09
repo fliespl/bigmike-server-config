@@ -10,6 +10,9 @@
 - name: Copy roundcube
   command: creates="{{ mail_vhost_htdocs }}/robots.txt" cp -R /tmp/roundcubemail-1.2.0/. {{ mail_vhost_htdocs }}
 
+- file: path={{ mail_vhost_htdocs }}/logs state=directory owner=www-data group=www-data
+- file: path={{ mail_vhost_htdocs }}/temp state=directory owner=www-data group=www-data
+
 - name: copy roundcube config
   template:
     src: roundcube.config.php.j2
