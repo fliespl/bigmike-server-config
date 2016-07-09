@@ -21,3 +21,9 @@ enabled = true
 port = ftp,ftp-data,ftps,ftps-data
 filter = proftpd
 logpath = /var/log/proftpd/proftpd.log
+
+[postgrey]
+enabled = true
+filter = postgrey
+logpath = /var/log/mail.log
+maxretry = 7

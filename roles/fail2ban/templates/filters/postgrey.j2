@@ -1,0 +1,11 @@
+[INCLUDES]
+before = common.conf
+
+[Definition]
+_daemon = postfix/(submission/)?smtp(d|s)
+
+failregex = reject: RCPT from (.*)\[<HOST>\]: 450.*Greylisted
+ignoreregex =
+
+[Init]
+journalmatch = _SYSTEMD_UNIT=postfix.service
