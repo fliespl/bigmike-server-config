@@ -26,6 +26,15 @@
 - name: Adjust APT update intervals
   copy: src="other/apt_periodic" dest=/etc/apt/apt.conf.d/10periodic
 
+
+- apt_repository: repo='deb http://repo.powerdns.com/ubuntu xenial-auth-master main' state=present filename='pdns'
+
+- apt_key: id=CBC8B383 url=https://repo.powerdns.com/CBC8B383-pub.asc state=present
+
+- template:
+    src: pin.j2
+    dest: /etc/apt/preferences.d/pdns
+
 - name: Install required packages
   include: packages.yml
 
