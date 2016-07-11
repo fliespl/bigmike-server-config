@@ -49,3 +49,9 @@
   - libxslt-dev
   - libmagickwand-dev
   - libbison-dev
+  - python-pip
+  - python-dev
+  - libffi-dev
+  - libxslt1-dev
+  - libjpeg8-dev
+  - zlib1g-dev
