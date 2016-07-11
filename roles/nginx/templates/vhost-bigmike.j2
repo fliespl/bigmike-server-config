@@ -55,6 +55,20 @@ server {
         proxy_redirect  http://127.0.0.1:2812 /monit;
     }
 
+    location /munin/static/ {
+            alias /etc/munin/static/;
+            expires modified +1w;
+    }
+
+    location /munin/ {
+            # auth_basic            "Restricted";
+            # Create the htpasswd file with the htpasswd tool.
+            # auth_basic_user_file  /etc/nginx/htpasswd;
+
+            alias /var/cache/munin/www/;
+            #expires modified +310s;
+    }
+
     location ~ ^/(phpmyadmin|postfixadmin) {
         include global/admin-only-access.conf;
 
