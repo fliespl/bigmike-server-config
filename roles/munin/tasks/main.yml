@@ -1,0 +1,8 @@
+- name: Install munin
+  apt: name=munin state=installed
+
+- name: Install munin-node
+  apt: name=munin-node state=installed
+
+- name: Install munin plugins
+  apt: name=munin-plugins-extra state=installed
