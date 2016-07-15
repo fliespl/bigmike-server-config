@@ -69,8 +69,7 @@ server {
 
     location /munin/ {
         include global/admin-only-access.conf;
-
-        proxy_pass http://localhost:4948/;
+        alias /var/cache/munin/www/;
     }
 
     location ~ ^/(phpmyadmin|postfixadmin) {
