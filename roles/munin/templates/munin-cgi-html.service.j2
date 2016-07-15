@@ -1,0 +1,11 @@
+[Unit]
+Description=Munin FastCGI HTML
+Documentation=man:spawn-fcgi
+
+[Service]
+Type=forking
+PIDFile=/var/run/munin/fcgi-html.pid
+ExecStart=/usr/bin/spawn-fcgi -s /var/run/munin/fcgi-html.sock -U www-data -u www-data -g munin /usr/lib/munin/cgi/munin-cgi-html -P /var/run/munin/fcgi-html.pid
+
+[Install]
+WantedBy=multi-user.target

@@ -24,6 +24,7 @@ logpath = /var/log/proftpd/proftpd.log
 
 [postgrey]
 enabled = true
+port = smtp,ssmtp,submission,imap2,imap3,imaps,pop3,pop3s
 filter = postgrey
 logpath = /var/log/mail.log
 maxretry = 7

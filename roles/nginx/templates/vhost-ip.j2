@@ -1,0 +1,8 @@
+server {
+    listen 80;
+    server_name ip.{{ server_domain }};
+
+    add_header Content-Type text/plain;
+
+    return 200 $remote_addr;
+}

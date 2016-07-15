@@ -38,7 +38,7 @@
   template:
     src: upstreams.j2
     dest: "/etc/nginx/conf.d/upstreams.conf"
-  notify: restart nginx
+  notify: reload nginx
 
 - name: setup logrotate
   template:
@@ -49,19 +49,26 @@
   template:
     src: empty.j2
     dest: "/etc/nginx/sites-enabled/default-vhost"
-  notify: restart nginx
+  notify: reload nginx
 
 - name: "setup {{ server_domain }}"
   template:
     src: vhost-bigmike.j2
     dest: "/etc/nginx/sites-enabled/{{ server_domain }}"
-  notify: restart nginx
+  notify: reload nginx
+
+- name: "setup ip.{{ server_domain }}"
+  template:
+    src: vhost-ip.j2
+    dest: "/etc/nginx/sites-enabled/ip.{{ server_domain }}"
+  notify: reload nginx
+
 
 - name: "setup mail.{{ server_domain }}"
   template:
     src: vhost-mail.j2
     dest: "/etc/nginx/sites-enabled/mail.{{ server_domain }}"
-  notify: restart nginx
+  notify: reload nginx
 
 
 - file: path={{ mail_vhost_logs }} state=directory
