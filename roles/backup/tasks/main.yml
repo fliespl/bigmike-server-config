@@ -1,0 +1,3 @@
+- cron: name="Setup gitlab backup" minute="15" hour="2" job="/ansible/scripts/backup-gitlab.sh"
+- cron: name="Setup mysql backup" minute="30" hour="2" job="/ansible/scripts/backup-mysql.sh"
+- cron: name="Setup nginx backup" minute="0" hour="3" job="/ansible/scripts/backup-nginx.sh"
