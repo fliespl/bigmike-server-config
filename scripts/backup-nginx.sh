@@ -31,6 +31,6 @@ fi
 # echo "Cleaning up old backups (older than $AGE days) and temporary files"
 find $BACKUP -mindepth 1 -maxdepth 1 -ctime +$AGE -exec echo "removing: "{} \; -exec rm -rf {} \;
 
-ncftpput -V -u "backup" -p "backup123" home.codeone.pl /BigMike/nginx $BACKUP/$TIMESTAMP.tar.gz
+ncftpput -V -t 3600 -u "backup" -p "backup123" home.codeone.pl /BigMike/nginx $BACKUP/$TIMESTAMP.tar.gz
 
 exit 0

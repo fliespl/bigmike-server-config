@@ -45,6 +45,6 @@ rm -rf $BACKUPDIR
 
 find $BACKUP -mindepth 1 -maxdepth 1 -ctime +$AGE -exec echo "removing: "{} \; -exec rm -rf {} \;
 
-ncftpput -V -u "backup" -p "backup123" home.codeone.pl /BigMike/gitlab $BACKUPDIR.tar.gz
+ncftpput -V -t 3600 -u "backup" -p "backup123" home.codeone.pl /BigMike/gitlab $BACKUPDIR.tar.gz
 
 exit 0
