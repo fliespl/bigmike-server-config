@@ -9,7 +9,7 @@
     src: common.conf.j2
     dest: "/etc/proftpd/conf.d/common.conf"
 
-# TODO: wylaczyc mod_delay w proftpd.conf => DelayEngine off
+- lineinfile: dest=/etc/hosts regexp="^DelayEngine" line="DelayEngine off"
 
 - name: Create proftpd database
   mysql_db: login_user=root login_password={{ mysql_root_password }} name={{ proftpd_mysql_db }} state=present encoding=utf8
