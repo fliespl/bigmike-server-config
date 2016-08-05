@@ -47,6 +47,7 @@ fi
 find $BACKUP -mindepth 1 -maxdepth 1 -ctime +$AGE -exec rm -rf {} \;
 
 ncftpput -V -t 3600 Backup /BigMike/mysql $BACKUPDIR.tar.gz
+rsync --ignore-existing $BACKUPDIR.tar.gz backups@chuck.net-labs.pl:~/backup/bigmike/mysql/
 
 if test $? -eq 0
 then

@@ -46,5 +46,6 @@ rm -rf $BACKUPDIR
 find $BACKUP -mindepth 1 -maxdepth 1 -ctime +$AGE -exec echo "removing: "{} \; -exec rm -rf {} \;
 
 ncftpput -V -t 3600 Backup /BigMike/gitlab $BACKUPDIR.tar.gz
+rsync --ignore-existing $BACKUPDIR.tar.gz backups@chuck.net-labs.pl:~/backup/bigmike/gitlab/
 
 exit 0

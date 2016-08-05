@@ -32,5 +32,6 @@ fi
 find $BACKUP -mindepth 1 -maxdepth 1 -ctime +$AGE -exec echo "removing: "{} \; -exec rm -rf {} \;
 
 ncftpput -V -t 3600 Backup /BigMike/nginx $BACKUP/$TIMESTAMP.tar.gz
+rsync --ignore-existing $BACKUP/$TIMESTAMP.tar.gz backups@chuck.net-labs.pl:~/backup/bigmike/nginx/
 
 exit 0
