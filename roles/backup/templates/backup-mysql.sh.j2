@@ -46,7 +46,8 @@ fi
 # echo "Cleaning up old backups (older than $AGE days) and temporary files"
 find $BACKUP -mindepth 1 -maxdepth 1 -ctime +$AGE -exec rm -rf {} \;
 
-ncftpput -V -u "backup" -p "backup123" home.codeone.pl /BigMike/mysql $BACKUPDIR.tar.gz
+ncftpput -V -t 10800 Backup /BigMike/mysql $BACKUPDIR.tar.gz
+rsync --ignore-existing $BACKUPDIR.tar.gz backups@chuck.net-labs.pl:~/backup/bigmike/mysql/
 
 if test $? -eq 0
 then

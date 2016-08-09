@@ -1,15 +1,19 @@
 - name: Install proftpd
   apt: name=proftpd-basic state=installed
+  notify: restart proftpd
 
 - name: Install proftpd mysql backend
   apt: name=proftpd-mod-mysql state=installed
+  notify: restart proftpd
 
 - name: Setup ProFTPd common
   template:
     src: common.conf.j2
     dest: "/etc/proftpd/conf.d/common.conf"
+  notify: restart proftpd
 
-# TODO: wylaczyc mod_delay w proftpd.conf => DelayEngine off
+- lineinfile: dest=/etc/hosts regexp="^DelayEngine" line="DelayEngine off"
+  notify: restart proftpd
 
 - name: Create proftpd database
   mysql_db: login_user=root login_password={{ mysql_root_password }} name={{ proftpd_mysql_db }} state=present encoding=utf8
@@ -30,11 +34,12 @@
   template:
     src: mysql.conf.j2
     dest: "/etc/proftpd/conf.d/mysql.conf"
+  notify: restart proftpd
 
 - name: Setup ProFTPd TLS
   template:
     src: tls.conf.j2
     dest: "/etc/proftpd/conf.d/tls.conf"
+  notify: restart proftpd
 
-- name: restart proftpd
-  service: name=proftpd state=restarted
+- meta: flush_handlers
