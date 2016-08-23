@@ -16,12 +16,12 @@ set httpd port 2812 and
 
 check system localhost
     if loadavg (5min) > 3 for 4 cycles then alert
-    if loadavg (15min) > 1 for 4 cycles then alert
+    if loadavg (15min) > 2 for 4 cycles then alert
     if memory usage > 80% for 4 cycles then alert
     if swap usage > 20% for 4 cycles then alert
     if cpu usage (user) > 80% for 4 cycles then alert
     if cpu usage (system) > 20% for 4 cycles then alert
-    if cpu usage (wait) > 20% for 4 cycles then alert
+    if cpu usage (wait) > 30% for 4 cycles then alert
 
 check process cron with pidfile /var/run/crond.pid
     start program = "/bin/systemctl start cron.service"
