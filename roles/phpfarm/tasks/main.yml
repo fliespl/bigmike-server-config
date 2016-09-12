@@ -18,10 +18,20 @@
     src: options.sh.j2
     dest: "/opt/phpfarm/custom/options.sh"
 
-- name: "Install default php.ini"
+- file: path=/opt/phpfarm/custom/php.ini state=absent
+
+- name: Create php configs dir
+  file: path=/opt/phpfarm/inst/configs state=directory
+
+- name: Create php sessions dir
+  file: path=/opt/phpfarm/inst/sessions state=directory
+
+- name: "Copy global php.ini"
   template:
     src: php.ini.j2
-    dest: "/opt/phpfarm/custom/php.ini"
+    dest: "/opt/phpfarm/inst/configs/global.ini"
+  notify:
+    - restart php-fpms
 
 - name: "Install phpfarm options for php-5.5"
   template:
