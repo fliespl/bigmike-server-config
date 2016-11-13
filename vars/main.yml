@@ -1,12 +1,33 @@
 ntp_timezone: Europe/Warsaw
 
 php_versions:
-  - { version: 5.4.45, modules: [{name: "imagick"}, {name: "memcache"}]}
-  - { version: 5.5.36, modules: [{name: "imagick"}, {name: "memcache"}]}
-  - { version: 5.6.22, modules: [{name: "imagick"}, {name: "memcache"}, {name: "redis", version: 2.2.8}]}
-  - { version: 7.0.7,  modules: [{name: "imagick"}, {name: "redis", version: 3.0.0}]}
+  - version: "5.4.45"
+    modules:
+      - {name: "imagick"}
+      - {name: "memcache"}
 
-default_php: 7.0.7
+  - version: "5.5.36"
+    modules:
+      - {name: "imagick"}
+      - {name: "memcache"}
+
+  - version: "5.6.22"
+    modules:
+      - {name: "imagick"}
+      - {name: "memcache"}
+      - {name: "redis", version: "2.2.8"}
+
+  - version: "7.0.7"
+    modules:
+      - {name: "imagick"}
+      - {name: "redis", version: 3.0.0}
+
+  - version: "7.0.12"
+    modules:
+      - {name: "imagick"}
+      - {name: "redis", version: 3.0.0}
+
+default_php: 7.0.12
 
 pdns_mysql_db: config_pdns
 pdns_mysql_user: pdns
