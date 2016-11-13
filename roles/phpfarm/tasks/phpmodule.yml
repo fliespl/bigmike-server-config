@@ -7,7 +7,7 @@
     creates: /opt/phpfarm/src/{{ php.version }}/modules/{{ module.name }}
     owner: root
     group: root
-  when: not module.version
+  when: 'version' not in module
 
 - unarchive:
     src: "https://pecl.php.net/get/{{ module.url }}-{{ module.version }}"
@@ -16,7 +16,7 @@
     creates: /opt/phpfarm/src/{{ php.version }}/modules/{{ module.name }}
     owner: root
     group: root
-  when: module.version
+  when: 'version' in module
 
 - shell: "mv /opt/phpfarm/src/{{ php.version }}/modules/{{ module.name }}-* /opt/phpfarm/src/{{ php.version }}/modules/{{ module.name }}"
   args:
