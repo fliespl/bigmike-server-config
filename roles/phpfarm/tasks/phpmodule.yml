@@ -1,7 +1,7 @@
 - file: path=/opt/phpfarm/src/{{ php.version }}/modules state=directory
 
 - unarchive:
-    src: "https://pecl.php.net/get/{{ module.url }}"
+    src: "https://pecl.php.net/get/{{ module.name }}"
     dest: /opt/phpfarm/src/{{ php.version }}/modules
     copy: no
     creates: /opt/phpfarm/src/{{ php.version }}/modules/{{ module.name }}
@@ -10,7 +10,7 @@
   when: module.version is not defined
 
 - unarchive:
-    src: "https://pecl.php.net/get/{{ module.url }}-{{ module.version }}"
+    src: "https://pecl.php.net/get/{{ module.name }}-{{ module.version }}"
     dest: /opt/phpfarm/src/{{ php.version }}/modules
     copy: no
     creates: /opt/phpfarm/src/{{ php.version }}/modules/{{ module.name }}
