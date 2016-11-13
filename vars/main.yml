@@ -3,8 +3,8 @@ ntp_timezone: Europe/Warsaw
 php_versions:
   - { version: 5.4.45, modules: ["imagick", "memcache"]}
   - { version: 5.5.36, modules: ["imagick", "memcache"]}
-  - { version: 5.6.22, modules: ["imagick", "memcache"]}
-  - { version: 7.0.7,  modules: ["imagick"]}
+  - { version: 5.6.22, modules: ["imagick", "memcache", "redis"]}
+  - { version: 7.0.7,  modules: ["imagick", "redis"]}
 
 default_php: 7.0.7
 

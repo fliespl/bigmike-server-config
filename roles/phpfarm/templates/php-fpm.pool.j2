@@ -2,7 +2,7 @@
 ;prefix = /path/to/pools/$pool
 user = www-data
 group = www-data
-listen = var/run/php-fpm.sock
+listen = /var/run/php/php{{ php.version }}-fpm.sock
 pm = dynamic
 pm.max_children = 5
 pm.start_servers = 2

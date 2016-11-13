@@ -39,3 +39,10 @@
 
 - name: Add {{ module }}
   lineinfile: dest=/opt/phpfarm/inst/php-{{ php.version }}/etc/php.ini regexp="^extension={{ module }}\.so$" line="extension={{ module }}.so"
+  when: module != 'xdebug'
+
+- name: Add ZEND {{ module }}
+  lineinfile: dest=/opt/phpfarm/inst/php-{{ php.version }}/etc/php.ini regexp="^zend_extension={{ module }}\.so$" line="zend_extension={{ module }}.so"
+  when: module == 'xdebug'
+
+
