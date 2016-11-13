@@ -7,7 +7,7 @@
     creates: /opt/phpfarm/src/{{ php.version }}/modules/{{ module.name }}
     owner: root
     group: root
-  when: !module.version
+  when: not module.version
 
 - unarchive:
     src: "https://pecl.php.net/get/{{ module.url }}-{{ module.version }}"
