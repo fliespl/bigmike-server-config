@@ -42,10 +42,10 @@
     loop_var: php
 
 - name: Create php sessions dir
-  file: path=/opt/phpfarm/inst/sessions state=directory
+  file: path=/opt/phpfarm/inst/sessions state=directory mode=0600
 
 - name: Create php versions sessions dir
-  file: path="/opt/phpfarm/inst/sessions/{{ php.version }}" state=directory
+  file: path="/opt/phpfarm/inst/sessions/{{ php.version }}" state=directory mode=0777
   with_items: "{{ php_versions }}"
   loop_control:
     loop_var: php
