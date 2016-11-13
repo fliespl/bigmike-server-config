@@ -1,7 +1,7 @@
 {% for php in php_versions %}
 
 upstream php-{{ php.version }} {
-    server unix:/opt/phpfarm/inst/php-{{ php.version }}/var/run/php-fpm.sock;
+    server unix:/var/run/php/php{{ php.version }}-fpm.sock;
 }
 
 {% endfor %}
