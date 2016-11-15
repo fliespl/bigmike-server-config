@@ -31,7 +31,7 @@ check process ntp with pidfile /var/run/ntpd.pid
     start program = "/bin/systemctl start ntd.service"
     stop program = "/bin/systemctl stop ntd.service"
 
-check process pdns with pidfile /var/run/pdns.pid
+check process pdns with match pdns_server
     start program = "/bin/systemctl start pdns.service"
     stop program = "/bin/systemctl stop pdns.service"
 
