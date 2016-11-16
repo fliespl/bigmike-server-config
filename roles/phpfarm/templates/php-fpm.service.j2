@@ -6,7 +6,7 @@ After=syslog.target network.target
 Type=simple
 ExecStartPre=/bin/mkdir -p /var/run/php
 {% if php.version == default_php %}
-ExecStartPost=/bin/ln -s /var/run/php/php{{ default_php }}-fpm.sock /var/run/php-fpm.sock
+ExecStartPost=/bin/ln -f -s /var/run/php/php{{ default_php }}-fpm.sock /var/run/php-fpm.sock
 {% endif %}
 PIDFile=/var/run/php/php{{ php.version }}-fpm.pid
 ExecStart=/opt/phpfarm/inst/php-{{ php.version }}/sbin/php-fpm --nodaemonize --fpm-config /opt/phpfarm/inst/php-{{ php.version }}/etc/php-fpm.conf
