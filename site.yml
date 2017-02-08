@@ -10,7 +10,7 @@
     - basic
     - mariadb
     - powerdns
-    - letsencrypt
+    - { name: letsencrypt, tags: le }
     - proftpd
     - nginx
     - varnish

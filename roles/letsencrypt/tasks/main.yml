@@ -1,29 +1,9 @@
 - name: Install letsencrypt
   apt: name=letsencrypt state=installed
 
-- stat: path="/etc/letsencrypt/live/{{ server_domain }}/fullchain.pem"
-  register: letsencrypt_cert
-
-- name: Check if nginx is installed
-  command: "dpkg -s nginx"
-  register: nginx_check
-  ignore_errors: yes
-  failed_when: false
-  changed_when: false
-
-- name: stop nginx
-  service: name=nginx state=stopped
-  when: letsencrypt_cert.stat.exists == False and nginx_check.stdout.find('install ok installed') != -1
-
 - name: Generate letsencrypt certificate
-  shell: "letsencrypt certonly --standalone --agree-tos --email=admin@{{ server_domain }} -d {{ server_domain }} -d www.{{ server_domain }} -d mail.{{ server_domain }} --text"
+  shell: "certbot certonly --keep --disable-hook-validation --pre-hook '{{ pre_hook|default('/usr/sbin/service nginx stop') }}' --post-hook '{{ post_hook|default('/usr/sbin/service nginx start') }}' --standalone --preferred-challenges http --agree-tos ---email=admin@{{ server_domain }} -d {{ server_domain }} -d www.{{ server_domain }} -d mail.{{ server_domain }} --text"
   args:
     creates: "/etc/letsencrypt/live/{{ server_domain }}/fullchain.pem"
-  when: letsencrypt_cert.stat.exists == False
 
-- name: start nginx
-  service: name=nginx state=started
-  when: nginx_check.stdout.find('install ok installed') != -1
-
-
-- cron: name="Check certificates" minute="0" hour="2" job="letsencrypt renew --webroot --webroot-path=/tmp/letsencrypt-auto --agree-tos > /tmp/letsencrypt-auto/status.log"
+- cron: name="LetsEncrypt renewal" special_time=daily job="certbot renew --pre-hook '{{ pre_hook|default('/usr/sbin/service nginx stop') }}' --post-hook '{{ post_hook|default('/usr/sbin/service nginx start') }}' -q --standalone --preferred-challenges http --agree-tos"

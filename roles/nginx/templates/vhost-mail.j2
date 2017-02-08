@@ -10,7 +10,6 @@ server {
     root {{ mail_vhost_htdocs }};
     index index.php index.html index.htm;
 
-    include global/letsencrypt.conf;
     include global/restrictions/global.conf;
     include global/ssl-params.conf;
 
