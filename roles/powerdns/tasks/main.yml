@@ -20,6 +20,7 @@
   shell: /usr/bin/mysql -Bse "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = '{{ pdns_mysql_db }}';"
   register: powerdns_database_tables_count
   changed_when: false
+  check_mode: no
 
 - name: Import pdns schema
   mysql_db: state=import name={{ pdns_mysql_db }} target=other/sql/pdns.sql
