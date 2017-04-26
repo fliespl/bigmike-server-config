@@ -27,9 +27,9 @@ check process cron with pidfile /var/run/crond.pid
     start program = "/bin/systemctl start cron.service"
     stop program = "/bin/systemctl stop cron.service"
 
-check process ntp with pidfile /var/run/ntpd.pid
-    start program = "/bin/systemctl start ntd.service"
-    stop program = "/bin/systemctl stop ntd.service"
+#check process ntp with pidfile /var/run/ntpd.pid
+#    start program = "/bin/systemctl start ntd.service"
+#    stop program = "/bin/systemctl stop ntd.service"
 
 check process pdns with match pdns_server
     start program = "/bin/systemctl start pdns.service"
