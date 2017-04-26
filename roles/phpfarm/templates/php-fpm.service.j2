@@ -10,7 +10,7 @@ ExecStartPre=/bin/mkdir -p /var/run/php
 ExecStartPost=/bin/ln -f -s /var/run/php/php{{ default_php }}-fpm.sock /var/run/php-fpm.sock
 {% endif %}
 {% if php.major_default|default(false) %}
-ExecStartPost=/bin/ln -f -s /var/run/php/php{{ php.version }}-fpm.sock /var/run/php/php{{ php.major_default }}.sock
+ExecStartPost=/bin/ln -f -s /opt/phpfarm/inst/php-{{ php.version }}/var/run /var/run/php/{{ php.major_default }}
 {% endif %}
 PIDFile=/var/run/php/php{{ php.version }}-fpm.pid
 ExecStart=/opt/phpfarm/inst/php-{{ php.version }}/sbin/php-fpm --nodaemonize --fpm-config /opt/phpfarm/inst/php-{{ php.version }}/etc/php-fpm.conf
