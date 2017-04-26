@@ -33,6 +33,14 @@
     src: options-5.5+.sh.j2
     dest: "/opt/phpfarm/custom/options-7.sh"
 
+- name: "Install php-fpm restart script"
+  template:
+    src: php-fpm-restart.sh.j2
+    dest: "/usr/local/bin/php-fpm-restart.sh"
+    mode: 700
+    owner: root
+    group: root
+
 - name: Create php configs dir
   file: path=/opt/phpfarm/inst/configs state=directory
 
