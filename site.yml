@@ -7,19 +7,19 @@
     - vars/main.yml
     - vars/parameters.yml
   roles:
-    - basic
-    - mariadb
-    - powerdns
-    - { name: letsencrypt, tags: le }
-    - proftpd
-    - nginx
-    - varnish
-    - postfix
-    - phpfarm
-    - firewall
-    - fail2ban
-    - logwatch
-    - secure
-    - monit
-    - munin
-    - backup
+    - { name: basic, tags: basic }
+    - { name: mariadb, tags: mariadb }
+    - { name: powerdns, tags: powerdns }
+    - { name: letsencrypt, tags: letsencrypt }
+    - { name: proftpd, tags: proftpd }
+    - { name: nginx, tags: nginx }
+    - { name: varnish, tags: varnish }
+    - { name: postfix, tags: postfix }
+    - { name: phpfarm, tags: phpfarm }
+    - { name: firewall, tags: firewall }
+    - { name: fail2ban, tags: fail2ban }
+    - { name: logwatch, tags: logwatch }
+    - { name: secure, tags: secure }
+    - { name: monit, tags: monit }
+    - { name: munin, tags: munin }
+    - { name: backup, tags: backup }
