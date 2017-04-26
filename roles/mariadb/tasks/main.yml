@@ -4,6 +4,7 @@
   ignore_errors: yes
   failed_when: false
   changed_when: false
+  check_mode: no
 
 - name: Preset mariadb password
   debconf: name=mariadb-server-10.0
