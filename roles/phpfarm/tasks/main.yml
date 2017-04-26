@@ -36,7 +36,7 @@
 - name: "Install php-fpm restart script"
   template:
     src: php-fpm-restart.sh.j2
-    dest: "/usr/local/bin/php-fpm-restart.sh"
+    dest: "/usr/local/bin/php-fpm-restart"
     mode: 700
     owner: root
     group: root
