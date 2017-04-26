@@ -6,11 +6,13 @@ After=syslog.target network.target
 Type=simple
 PermissionsStartOnly=true
 ExecStartPre=/bin/mkdir -p /var/run/php
+ExecStartPre=/bin/ln -f -s /opt/phpfarm/inst/php-{{ php.version }}/var/run /var/run/php/{{ php.version }}
+{% if php.major_default|default(false) %}
+ExecStartPre=/bin/ln -f -s /opt/phpfarm/inst/php-{{ php.version }}/var/run /var/run/php/{{ php.major_default }}
+{% endif %}
+
 {% if php.version == default_php %}
 ExecStartPost=/bin/ln -f -s /var/run/php/php{{ default_php }}-fpm.sock /var/run/php-fpm.sock
-{% endif %}
-{% if php.major_default|default(false) %}
-ExecStartPost=/bin/ln -f -s /opt/phpfarm/inst/php-{{ php.version }}/var/run /var/run/php/{{ php.major_default }}
 {% endif %}
 PIDFile=/var/run/php/php{{ php.version }}-fpm.pid
 ExecStart=/opt/phpfarm/inst/php-{{ php.version }}/sbin/php-fpm --nodaemonize --fpm-config /opt/phpfarm/inst/php-{{ php.version }}/etc/php-fpm.conf
