@@ -25,6 +25,7 @@
 - shell: ls -d /opt/phpfarm/src/{{ php.version }}/modules/{{ module.name }}
   register: module_dir
   changed_when: false
+  check_mode: no
 
 #- stat:
 #    path: "{{ module_dir.stdout }}/Makefile"

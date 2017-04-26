@@ -43,6 +43,7 @@
   shell: /usr/bin/mysql -Bse "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = '{{ postfix_mysql_db }}';"
   register: postfix_database_tables_count
   changed_when: false
+  check_mode: no
 
 - name: Import postfix schema
   mysql_db: state=import name={{ postfix_mysql_db }} target=other/sql/postfix.sql

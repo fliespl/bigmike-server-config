@@ -47,6 +47,7 @@
 - shell: "/opt/phpfarm/inst/php-{{ php.version }}/bin/php-config --extension-dir"
   register: extension_dir
   changed_when: false
+  check_mode: no
 
 - name: "compile php module {{ item }}"
   include: phpmodule.yml

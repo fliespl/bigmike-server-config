@@ -1,5 +1,6 @@
 - stat: path=/opt/phpfarm/build.xml
   register: phpfarm_file
+  check_mode: no
 
 - git: repo=https://github.com/fpoirotte/phpfarm.git dest=/opt/phpfarm depth=1
   when: phpfarm_file.stat.exists == False

@@ -25,6 +25,7 @@
   shell: /usr/bin/mysql -Bse "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = '{{ roundcube_mysql_db }}';"
   register: roundcube_database_tables_count
   changed_when: false
+  check_mode: no
 
 - name: Import roundcube schema
   mysql_db: state=import name={{ roundcube_mysql_db }} target={{ mail_vhost_htdocs }}/SQL/mysql.initial.sql
