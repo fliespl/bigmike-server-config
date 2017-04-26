@@ -82,6 +82,8 @@
     loop_var: php
 
 - command: "/opt/phpfarm/inst/bin/switch-phpfarm {{ default_php }}"
+  changed_when: false
+
 - file: src=/opt/phpfarm/inst/current/bin/php dest=/usr/local/bin/php state=link
 
 - meta: flush_handlers

@@ -12,6 +12,10 @@ session.save_path=/opt/phpfarm/inst/sessions/{{ php.version }}
     opcache.enable_cli=1
 {% endif %}
 
-{% if php.version | version_compare('5.6', ">=") %}
-    extension=redis.so
-{%endif %}
+{% for module in php.modules %}
+    {% if module.name == 'xdebug' %}
+zend_extension={{ module.name }}.so
+    {% else %}
+extension={{ module.name }}.so
+    {% endif %}
+{% endfor %}

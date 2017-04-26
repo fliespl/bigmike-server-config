@@ -47,13 +47,3 @@
     - make install
   notify:
     - restart php-fpms
-
-- name: Add {{ module }}
-  lineinfile: dest=/opt/phpfarm/inst/php-{{ php.version }}/etc/php.ini regexp="^extension={{ module.name }}\.so$" line="extension={{ module.name }}.so"
-  when: module != 'xdebug'
-
-- name: Add ZEND {{ module }}
-  lineinfile: dest=/opt/phpfarm/inst/php-{{ php.version }}/etc/php.ini regexp="^zend_extension={{ module.name }}\.so$" line="zend_extension={{ module.name }}.so"
-  when: module == 'xdebug'
-
-
