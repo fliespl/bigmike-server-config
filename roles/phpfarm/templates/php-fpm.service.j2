@@ -9,6 +9,9 @@ ExecStartPre=/bin/mkdir -p /var/run/php
 {% if php.version == default_php %}
 ExecStartPost=/bin/ln -f -s /var/run/php/php{{ default_php }}-fpm.sock /var/run/php-fpm.sock
 {% endif %}
+{% if php.major_default|default(false) %}
+ExecStartPost=/bin/ln -f -s /var/run/php/php{{ php.version }}-fpm.sock /var/run/php/php{{ php.major_default }}.sock
+{% endif %}
 PIDFile=/var/run/php/php{{ php.version }}-fpm.pid
 ExecStart=/opt/phpfarm/inst/php-{{ php.version }}/sbin/php-fpm --nodaemonize --fpm-config /opt/phpfarm/inst/php-{{ php.version }}/etc/php-fpm.conf
 ExecReload=/bin/kill -USR2 $MAINPID
