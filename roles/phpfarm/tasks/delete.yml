@@ -1,0 +1,34 @@
+- file: path="/run/php/{{ php }}" state=absent
+
+- file: path="/opt/phpfarm/inst/sessions/{{ php }}" state=absent
+
+- file: path="/opt/phpfarm/inst/configs/{{ php }}" state=absent
+
+- file: path="/opt/phpfarm/inst/bin/{{ item }}-{{ php }}" state=absent
+  with_items:
+    - php-cgi
+    - php-config
+    - phar
+    - pyrus
+    - php-fpm
+    - phpize
+    - php
+
+- file: path="/opt/phpfarm/inst/php-{{ php }}" state=absent
+
+- file: path="/opt/phpfarm/src/php-{{ php }}" state=absent
+
+- file: path="/opt/phpfarm/src/bzips/php-{{ php }}" state=absent
+
+- file: path="/opt/phpfarm/src/{{ php }}" state=absent
+
+- file: path="/opt/phpfarm/src/bzips/php-{{ php }}.tar.bz2" state=absent
+
+- name: "Stop php-fpm service {{ php.version }}"
+  systemd: name="php-fpm-{{ php }}" state=stopped enabled=no daemon_reload=yes
+  failed_when: false
+
+- file: path="/etc/systemd/system/php-fpm-{{ php }}.service" state=absent
+  notify: reload systemd
+
+- meta: flush_handlers
