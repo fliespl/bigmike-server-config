@@ -1,2 +1,2 @@
 [bigmike]
-localhost ansible_connection=local
+bigmike.ovh ansible_host=bigmike.ovh

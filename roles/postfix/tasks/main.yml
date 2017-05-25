@@ -62,11 +62,13 @@
   template:
     src: other.j2
     dest: "/etc/dovecot/conf.d/100-dovecot.conf"
+  notify: restart postfix services
 
 - name: "Dovecot MySQL Config"
   template:
     src: mysql.j2
     dest: "/etc/dovecot/dovecot-sql.conf.ext"
+  notify: restart postfix services
 
 - lineinfile: dest=/etc/dovecot/conf.d/10-auth.conf regexp="{{ item.regexp }}" line="{{ item.line }}"
   with_items:
@@ -74,8 +76,10 @@
     - { regexp: "^#?auth_mechanisms =", line: "auth_mechanisms = plain login"}
     - { regexp: "^#?!include auth-sql.conf.ext", line: "!include auth-sql.conf.ext"}
     - { regexp: "^#?!include auth-system.conf.ext", line: "#!include auth-system.conf.ext"}
+  notify: restart postfix services
 
 - file: path=/etc/dovecot recurse=yes owner=vmail group=dovecot mode=0750
+  notify: restart postfix services
 
 #- file: path=/etc/dovecot/dovecot-sql.conf.ext owner=root group=root mode=0600
 
@@ -84,63 +88,66 @@
 - user: name=amavis groups=clamav,amavis
 
 - lineinfile: dest=/etc/clamav/clamd.conf regexp="AllowSupplementaryGroups " line="AllowSupplementaryGroups true"
+  notify: restart postfix services
 
 - name: "Amavis filters"
   template:
     src: amavis.j2
     dest: "/etc/amavis/conf.d/15-content_filter_mode"
-
+  notify: restart postfix services
 
 - name: "Amavis local delivery setup"
   template:
     src: amavis-user.j2
     dest: "/etc/amavis/conf.d/50-user"
+  notify: restart postfix services
 
 - template:
     src: postfix/header_checks.j2
     dest: "/etc/postfix/header_checks"
+  notify: restart postfix services
 
 - template:
     src: postfix/mysql_virtual_alias_domainaliases_maps.j2
     dest: "/etc/postfix/mysql_virtual_alias_domainaliases_maps.cf"
+  notify: restart postfix services
 
 - template:
     src: postfix/mysql_virtual_alias_maps.j2
     dest: "/etc/postfix/mysql_virtual_alias_maps.cf"
+  notify: restart postfix services
 
 - template:
     src: postfix/mysql_virtual_domains_maps.j2
     dest: "/etc/postfix/mysql_virtual_domains_maps.cf"
+  notify: restart postfix services
 
 - template:
     src: postfix/mysql_virtual_mailbox_domainaliases_maps.j2
     dest: "/etc/postfix/mysql_virtual_mailbox_domainaliases_maps.cf"
+  notify: restart postfix services
 
 - template:
     src: postfix/mysql_virtual_mailbox_maps.j2
     dest: "/etc/postfix/mysql_virtual_mailbox_maps.cf"
+  notify: restart postfix services
 
 - template:
     src: postfix/mysql_virtual_sender_login_maps.j2
     dest: "/etc/postfix/mysql_virtual_sender_login_maps.cf"
+  notify: restart postfix services
 
 - template:
     src: postfix/main.j2
     dest: "/etc/postfix/main.cf"
+  notify: restart postfix services
 
 - template:
     src: postfix/master.j2
     dest: "/etc/postfix/master.cf"
+  notify: restart postfix services
 
 - shell: freshclam
   ignore_errors: yes
 
-- name: Restart postfix services
-  service: name={{ item }} state=restarted enabled=yes
-  with_items:
-    - postfix
-    - spamassassin
-    - clamav-daemon
-    - amavis
-    - dovecot
-
+- meta: flush_handlers

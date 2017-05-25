@@ -1,0 +1,8 @@
+- name: restart postfix services
+  service: name={{ item }} state=restarted enabled=yes
+  with_items:
+    - postfix
+    - spamassassin
+    - clamav-daemon
+    - amavis
+    - dovecot

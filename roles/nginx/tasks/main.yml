@@ -15,9 +15,17 @@
 
 - file: path=/var/www/html state=absent
 
-- file: path=/etc/nginx/snippets state=absent
+- file: path=/etc/nginx/snippets state=directory
 
-- file: path=/etc/nginx/global src={{ playbook_dir }}/roles/nginx/snippets state=link
+- synchronize:
+    src: "{{ playbook_dir }}/roles/nginx/snippets/"
+    dest: /etc/nginx/snippets/
+    archive: no
+    delete: yes
+    recursive: yes
+  notify: reload nginx
+
+- file: path=/etc/nginx/global src=/etc/nginx/snippets state=link force=yes
 
 - file: path={{ main_vhost_logs }} state=directory
 - file: path={{ main_vhost_htdocs }} state=directory

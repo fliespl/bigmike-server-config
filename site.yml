@@ -2,24 +2,24 @@
 # This playbook deploys the whole application stack in this site.
 
 - name: apply common configuration
-  hosts: all
+  hosts: bigmike
   vars_files:
     - vars/main.yml
     - vars/parameters.yml
   roles:
-    - { name: basic, tags: basic }
-    - { name: mariadb, tags: mariadb }
-    - { name: powerdns, tags: powerdns }
-    - { name: letsencrypt, tags: letsencrypt }
-    - { name: proftpd, tags: proftpd }
-    - { name: nginx, tags: nginx }
-    - { name: varnish, tags: varnish }
-    - { name: postfix, tags: postfix }
-    - { name: phpfarm, tags: phpfarm }
-    - { name: firewall, tags: firewall }
-    - { name: fail2ban, tags: fail2ban }
-    - { name: logwatch, tags: logwatch }
-    - { name: secure, tags: secure }
-    - { name: monit, tags: monit }
-    - { name: munin, tags: munin }
-    - { name: backup, tags: backup }
+    - { name: basic, become: true, tags: basic}
+    - { name: mariadb, become: true, tags: mariadb }
+    - { name: powerdns, become: true, tags: powerdns }
+    - { name: letsencrypt, become: true, tags: letsencrypt }
+    - { name: proftpd, become: true, tags: proftpd }
+    - { name: nginx, become: true, tags: nginx }
+    - { name: varnish, become: true, tags: varnish }
+    - { name: postfix, become: true, tags: postfix }
+    - { name: phpfarm, become: true, tags: phpfarm }
+    - { name: firewall, become: true, tags: firewall }
+    - { name: fail2ban, become: true, tags: fail2ban }
+    - { name: logwatch, become: true, tags: logwatch }
+    - { name: secure, become: true, tags: secure }
+    - { name: monit, become: true, tags: monit }
+    - { name: munin, become: true, tags: munin }
+    - { name: backup, become: true, tags: backup }

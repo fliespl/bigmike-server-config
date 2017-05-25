@@ -22,6 +22,3 @@
   - mariadb-client
   - mariadb-server
   - python-mysqldb
-
-- name: restart mysql
-  service: name=mysql state=restarted

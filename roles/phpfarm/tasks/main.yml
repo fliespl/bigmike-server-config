@@ -89,6 +89,12 @@
   loop_control:
     loop_var: php
 
+- name: delete old php versions
+  include: delete.yml
+  with_items: "{{ deleted_php_versions }}"
+  loop_control:
+    loop_var: php
+
 - command: "/opt/phpfarm/inst/bin/switch-phpfarm {{ default_php }}"
   changed_when: false
 

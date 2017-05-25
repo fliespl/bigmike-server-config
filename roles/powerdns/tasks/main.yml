@@ -36,6 +36,6 @@
     - { regexp: ^gmysql-dbname=, line: "gmysql-dbname={{ pdns_mysql_db }}"}
     - { regexp: ^gmysql-user=, line: "gmysql-user={{ pdns_mysql_user }}"}
     - { regexp: ^gmysql-password=, line: "gmysql-password={{ pdns_mysql_pass }}"}
+  notify: restart pdns
 
-- name: restart pdns
-  service: name=pdns state=restarted
+- meta: flush_handlers
