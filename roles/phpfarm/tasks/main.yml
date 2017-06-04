@@ -1,4 +1,5 @@
-- stat: path=/opt/phpfarm/build.xml
+- name: Register phpfarm
+  stat: path=/opt/phpfarm/build.xml
   register: phpfarm_file
   check_mode: no
 

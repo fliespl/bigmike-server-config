@@ -22,16 +22,6 @@
     src: php-fpm.pool.j2
     dest: "/opt/phpfarm/inst/php-{{ php.version }}/etc/php-fpm.d/default-pool.conf"
 
-
-#- name: "Install php-fpm init.d {{ php.version }}"
-#  template:
-#    src: php-fpm.init.d.j2
-#    dest: "/etc/init.d/php-fpm-{{ php.version }}"
-#    mode: 0755
-#  notify:
-#    - "reload systemd"
-#    - "start php-fpms"
-
 - name: "Install php-fpm service {{ php.version }}"
   template:
     src: php-fpm.service.j2
