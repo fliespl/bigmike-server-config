@@ -18,7 +18,9 @@ do
   tar -zcf "$BACKUPDIR/$base.tar.gz" --exclude-tag-all=.do-not-backup -C  /var/www/accounts "${base}"
 done
 
-tar -zcf $BACKUPDIR.tar.gz -C $BACKUP $TIMESTAMP
+zip -q -s 500m -r $BACKUPDIR.zip $BACKUPDIR/*
+
+#tar -zcf $BACKUPDIR.tar.gz -C $BACKUP $TIMESTAMP
 
 if test $? -eq 0
 then
@@ -31,7 +33,7 @@ fi
 # echo "Cleaning up old backups (older than $AGE days) and temporary files"
 find $BACKUP -mindepth 1 -maxdepth 1 -ctime +$AGE -exec rm -rf {} \;
 
-ncftpput -V -t 10800 Backup /BigMike/nginx $BACKUP/$TIMESTAMP.tar.gz
-rsync --ignore-existing $BACKUP/$TIMESTAMP.tar.gz backups@chuck.net-labs.pl:~/backup/bigmike/nginx/
+ncftpput -V -t 10800 Backup /BigMike/nginx $BACKUP/$TIMESTAMP.z*
+rsync --ignore-existing $BACKUP/$TIMESTAMP.z* backups@chuck.net-labs.pl:~/backup/bigmike/nginx/
 
 exit 0

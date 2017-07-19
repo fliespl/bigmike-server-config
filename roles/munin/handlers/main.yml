@@ -6,3 +6,7 @@
   with_items:
     - munin-cgi-graph
     - munin-cgi-html
+
+- name: reload munin
+  service: name=munin-node state=restarted
+  become: true

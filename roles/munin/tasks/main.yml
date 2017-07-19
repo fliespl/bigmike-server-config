@@ -28,4 +28,26 @@
     - "reload systemd"
     - "start munin-cgi"
 
-- meta: flush_handlers
+- name: Clone php-fpm plugins
+  git:
+    repo: https://github.com/tjstein/php5-fpm-munin-plugins.git
+    dest: /usr/share/munin/plugins/php5-fpm-munin-plugins
+    depth: 1
+    update: no
+
+- find:
+    paths: "/usr/share/munin/plugins/php5-fpm-munin-plugins"
+    patterns: "phpfpm_*"
+  register: munin_files
+
+- file:
+    path: "{{ item.path }}"
+    mode: 0755
+  with_items: "{{ munin_files.files }}"
+
+- name: Include mysql munin
+  include: mysql.yml
+
+- name: Include php munin
+  include: php.yml
+
