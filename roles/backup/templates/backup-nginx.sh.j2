@@ -15,10 +15,10 @@ fi
 for dir in /var/www/accounts/*
 do
   base=$(basename "$dir")
-  tar -zcf "$BACKUPDIR/$base.tar.gz" --exclude-tag-all=.do-not-backup -C  /var/www/accounts "${base}"
+  tar -zcf --warning=no-file-changed "$BACKUPDIR/$base.tar.gz" --exclude-tag-all=.do-not-backup -C  /var/www/accounts "${base}"
 done
 
-tar -zcf $BACKUPDIR.tar.gz -C $BACKUP $TIMESTAMP
+tar -zcf --warning=no-file-changed $BACKUPDIR.tar.gz -C $BACKUP $TIMESTAMP
 
 if test $? -eq 0
 then
@@ -31,7 +31,10 @@ fi
 # echo "Cleaning up old backups (older than $AGE days) and temporary files"
 find $BACKUP -mindepth 1 -maxdepth 1 -ctime +$AGE -exec rm -rf {} \;
 
-ncftpput -V -t 10800 Backup /BigMike/nginx $BACKUP/$TIMESTAMP.tar.gz
+PASSWD=`cat /root/backup.pass`
+
+curl -sS --max-time 10800 -T $BACKUP/$TIMESTAMP.tar.gz ftp://home.codeone.pl/BigMike/nginx/$TIMESTAMP.tar.gz --user backup:${PASSWD}
+#ncftpput -V -t 10800 Backup /BigMike/nginx $BACKUP/$TIMESTAMP.tar.gz
 rsync --ignore-existing $BACKUP/$TIMESTAMP.tar.gz backups@chuck.net-labs.pl:~/backup/bigmike/nginx/
 
 exit 0
