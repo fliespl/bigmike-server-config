@@ -23,3 +23,4 @@
     - { name: monit, become: true, tags: monit }
     - { name: munin, become: true, tags: munin }
     - { name: backup, become: true, tags: backup }
+    - { name: jasonroyle.rabbitmq, become: true, tags: rabbitmq }

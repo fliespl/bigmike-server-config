@@ -1,3 +1,5 @@
+ansible_become_pass:
+
 server_root_password:
 mysql_root_password:
 server_domain:
@@ -9,3 +11,5 @@ postfix_mysql_pass:
 roundcube_mysql_pass:
 admin1_mail:
 admin2_mail:
+
+rabbitmq_admin_password:

@@ -16,12 +16,14 @@ php_versions:
   - version: "5.5.38"
     major_default: 5.5
     modules:
+      - {name: "apcu", version: "4.0.11"}
       - {name: "imagick"}
       - {name: "memcache"}
 
   - version: "5.6.30"
     major_default: 5.6
     modules:
+      - {name: "apcu", version: "4.0.11"}
       - {name: "imagick"}
       - {name: "memcache"}
       - {name: "redis", version: "2.2.8"}
@@ -46,3 +48,14 @@ postfix_mysql_user: postfix
 
 roundcube_mysql_db: config_roundcube
 roundcube_mysql_user: roundcube
+
+# RabbitMQ
+rabbitmq_version: 3.6.10-1
+rabbitmq_users:
+  - user: admin
+    password: "{{ rabbitmq_admin_password }}"
+    tags: administrator
+rabbitmq_users_absent:
+  - guest
+rabbitmq_plugins:
+  - rabbitmq_management
