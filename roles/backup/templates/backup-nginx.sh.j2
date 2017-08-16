@@ -15,12 +15,18 @@ fi
 for dir in /var/www/accounts/*
 do
   base=$(basename "$dir")
-  tar -zcf --warning=no-file-changed "$BACKUPDIR/$base.tar.gz" --exclude-tag-all=.do-not-backup -C  /var/www/accounts "${base}"
+  tar -zcf "$BACKUPDIR/$base.tar.gz" --exclude-tag-all=.do-not-backup -C  /var/www/accounts "${base}"
+
+  if test $? -eq 0
+  then
+  	rm -rf $BACKUPDIR
+  else
+  	echo "Backup file not created." >&2
+  	exit 1
+  fi
 done
 
 zip -q -s 500m -r $BACKUPDIR.zip $BACKUPDIR/*
-
-#tar -zcf $BACKUPDIR.tar.gz -C $BACKUP $TIMESTAMP
 
 if test $? -eq 0
 then

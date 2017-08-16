@@ -31,8 +31,7 @@ for db in $databases; do
   $MYSQLDUMP --force --opt --events --ignore-table=mysql.event --user=$MYSQL_USER --databases $db | gzip > "$BACKUPDIR/$db.gz"
 done
 
-tar -zcf --warning=no-file-changed $BACKUPDIR.tar.gz -C $BACKUP $TIMESTAMP
-
+tar -zcf $BACKUPDIR.tar.gz -C $BACKUP $TIMESTAMP
 
 if test $? -eq 0
 then

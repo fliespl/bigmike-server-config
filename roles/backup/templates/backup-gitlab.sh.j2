@@ -34,7 +34,8 @@ sudo sh -c 'umask 0077; tar -cf ${BACKUPDIR}/etc-ssh.tar -C / etc/ssh'
 # gitlab ssh backup
 sudo sh -c 'umask 0077; tar -cf ${BACKUPDIR}/gitlab-ssh.tar -C / var/opt/gitlab/.ssh'
 
-tar -zcf --warning=no-file-changed $BACKUPDIR.tar.gz -C $BACKUP $TIMESTAMP
+tar -zcf $BACKUPDIR.tar.gz -C $BACKUP $TIMESTAMP
+
 if test $? -ne 0
 then
 	echo "Backup file not created." >&2
