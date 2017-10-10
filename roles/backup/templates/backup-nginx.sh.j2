@@ -15,7 +15,7 @@ fi
 for dir in /var/www/accounts/*
 do
   base=$(basename "$dir")
-  tar -zcf "$BACKUPDIR/$base.tar.gz" --exclude-tag-all=.do-not-backup -C  /var/www/accounts "${base}"
+  tar -zcf "$BACKUPDIR/$base.tar.gz" --ignore-failed-read --exclude-tag-all=.do-not-backup -C  /var/www/accounts "${base}"
 
   if test $? -eq 0
   then
