@@ -86,7 +86,9 @@
 - name: Setup roundcube
   include: roundcube.yml
 
+#- name: Setup mailpile
+#  include: mailpile.yml
+
 - include: postfixadmin.yml
-- include: phpmyadmin.yml
 
 - meta: flush_handlers

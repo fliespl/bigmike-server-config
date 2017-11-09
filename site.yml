@@ -13,6 +13,7 @@
     - { name: letsencrypt, become: true, tags: letsencrypt }
     - { name: proftpd, become: true, tags: proftpd }
     - { name: nginx, become: true, tags: nginx }
+    - { name: pma, become: true, tags: pma }
     - { name: varnish, become: true, tags: varnish }
     - { name: postfix, become: true, tags: postfix }
     - { name: phpfarm, become: true, tags: phpfarm }
