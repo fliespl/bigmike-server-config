@@ -101,6 +101,14 @@
 
 - file: src=/opt/phpfarm/inst/current/bin/php dest=/usr/local/bin/php state=link
 
+
+- name: create php versions symlinks
+  file: src=/opt/phpfarm/inst/bin/php-{{ php.version }} dest=/usr/local/bin/php-{{ php.major_default }} state=link
+  with_items: "{{ php_versions }}"
+  when: php.major_default|default(false)
+  loop_control:
+    loop_var: php
+
 - meta: flush_handlers
 
 - file: src=/var/run/php/php{{ default_php }}-fpm.sock dest=/var/run/php-fpm.sock state=link

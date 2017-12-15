@@ -31,4 +31,6 @@
 - file: path="/etc/systemd/system/php-fpm-{{ php }}.service" state=absent
   notify: reload systemd
 
+- file: path=/usr/local/bin/php-{{ php[0:3] }} state=absent
+
 - meta: flush_handlers

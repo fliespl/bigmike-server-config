@@ -17,7 +17,8 @@
 
 - file: path=/etc/nginx/snippets state=directory
 
-- synchronize:
+- name: "Synchronize snippets"
+  synchronize:
     src: "{{ playbook_dir }}/roles/nginx/snippets/"
     dest: /etc/nginx/snippets/
     archive: no
