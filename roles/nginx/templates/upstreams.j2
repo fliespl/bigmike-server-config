@@ -4,4 +4,8 @@ upstream php-{{ php.version }} {
     server unix:/var/run/php/php{{ php.version }}-fpm.sock;
 }
 
+{% if php.major_default|default(false) %}
+    server unix:/var/run/php/php{{ php.major_default }}-fpm.sock;
+{%endif %}
+
 {% endfor %}
