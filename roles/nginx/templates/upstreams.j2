@@ -5,7 +5,9 @@ upstream php-{{ php.version }} {
 }
 
 {% if php.major_default|default(false) %}
+upstream php-{{ php.major_default }} {
     server unix:/var/run/php/php{{ php.major_default }}-fpm.sock;
-{%endif %}
+}
+{% endif %}
 
 {% endfor %}

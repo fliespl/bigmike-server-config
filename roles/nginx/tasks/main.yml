@@ -85,11 +85,11 @@
 
 
 - name: Setup roundcube
-  include: roundcube.yml
+  import_tasks: roundcube.yml
 
 #- name: Setup mailpile
-#  include: mailpile.yml
+#  import_tasks: mailpile.yml
 
-- include: postfixadmin.yml
+- import_tasks: postfixadmin.yml
 
 - meta: flush_handlers
