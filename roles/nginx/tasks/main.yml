@@ -24,6 +24,7 @@
     archive: no
     delete: yes
     recursive: yes
+    checksum: yes
   notify: reload nginx
 
 - file: path=/etc/nginx/global src=/etc/nginx/snippets state=link force=yes
@@ -79,6 +80,12 @@
     dest: "/etc/nginx/sites-enabled/mail.{{ server_domain }}"
   notify: reload nginx
 
+- name: prepare main config
+  template:
+    src: nginx.conf.j2
+    dest: "/etc/nginx/nginx.conf"
+    backup: yes
+  notify: reload nginx
 
 - file: path={{ mail_vhost_logs }} state=directory
 - file: path={{ mail_vhost_htdocs }} state=directory

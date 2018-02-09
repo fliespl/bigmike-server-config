@@ -53,7 +53,7 @@ php_versions:
       - {name: "imagick"}
       - {name: "redis", version: 3.1.4}
 
-default_php: 7.0.26
+default_php: 7.0
 
 pdns_mysql_db: config_pdns
 pdns_mysql_user: pdns
