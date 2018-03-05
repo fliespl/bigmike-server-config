@@ -6,7 +6,7 @@
   apt: name=letsencrypt state=installed
 
 - name: Generate letsencrypt certificate
-  shell: "certbot certonly --keep --disable-hook-validation --pre-hook '{{ pre_hook|default('/usr/sbin/service nginx stop') }}' --post-hook '{{ post_hook|default('/usr/sbin/service nginx start') }}' --standalone --preferred-challenges http --agree-tos ---email=admin@{{ server_domain }} -d {{ server_domain }} -d www.{{ server_domain }} -d mail.{{ server_domain }} --text"
+  shell: "certbot certonly --keep --disable-hook-validation --pre-hook '{{ pre_hook|default('/usr/sbin/service nginx stop') }}' --post-hook '{{ post_hook|default('/usr/sbin/service nginx start') }}' --standalone --preferred-challenges http --agree-tos --email=admin@{{ server_domain }} -d {{ server_domain }} -d www.{{ server_domain }} -d mail.{{ server_domain }} --text"
   args:
     creates: "/etc/letsencrypt/live/{{ server_domain }}/fullchain.pem"
 

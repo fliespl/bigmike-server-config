@@ -11,6 +11,7 @@
     - { name: mariadb, become: true, tags: mariadb }
     - { name: powerdns, become: true, tags: powerdns }
     - { name: letsencrypt, become: true, tags: letsencrypt }
+    - { name: letsencrypt, become: true, tags: letsencrypt, server_domain: torrent.bigmike.ovh }
     - { name: proftpd, become: true, tags: proftpd }
     - { name: nginx, become: true, tags: nginx }
     - { name: pma, become: true, tags: pma }
