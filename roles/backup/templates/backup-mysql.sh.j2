@@ -28,7 +28,8 @@ fi
 databases=`$MYSQL --user=$MYSQL_USER -e "SHOW DATABASES;" | grep -Ev "(Database|information_schema|performance_schema)"`
 
 for db in $databases; do
-  $MYSQLDUMP --force --opt --events --ignore-table=mysql.event --user=$MYSQL_USER --databases $db | gzip > "$BACKUPDIR/$db.gz"
+  $MYSQLDUMP  --defaults-extra-file=/etc/mysql/debian.cnf --single-transaction --quick --events $db | gzip > "$BACKUPDIR/$db.sql.gz"
+  #$MYSQLDUMP --force --opt --events --ignore-table=mysql.event --user=$MYSQL_USER --databases $db | gzip > "$BACKUPDIR/$db.sql.gz"
 done
 
 tar -zcf $BACKUPDIR.tar.gz -C $BACKUP $TIMESTAMP
@@ -45,8 +46,7 @@ fi
 # echo "Cleaning up old backups (older than $AGE days) and temporary files"
 find $BACKUP -mindepth 1 -maxdepth 1 -ctime +$AGE -exec rm -rf {} \;
 
-ncftpput -V -t 10800 Backup /BigMike/mysql $BACKUPDIR.tar.gz
-rsync --ignore-existing $BACKUPDIR.tar.gz backups@chuck.net-labs.pl:~/backup/bigmike/mysql/
+rsync --ignore-existing $BACKUPDIR.tar.gz -e "ssh -p 22222 -i ~/.ssh/backup.priv" backup@94.229.222.114:/var/backups/BigMike/mysql/
 
 if test $? -eq 0
 then

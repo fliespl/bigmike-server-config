@@ -46,7 +46,7 @@ rm -rf $BACKUPDIR
 
 find $BACKUP -mindepth 1 -maxdepth 1 -ctime +$AGE -exec rm -rf {} \;
 
-ncftpput -V -t 10800 Backup /BigMike/gitlab $BACKUPDIR.tar.gz
-rsync --ignore-existing $BACKUPDIR.tar.gz backups@chuck.net-labs.pl:~/backup/bigmike/gitlab/
+rsync --ignore-existing $BACKUPDIR.tar.gz -e "ssh -p 22222 -i ~/.ssh/backup.priv" backup@94.229.222.114:/var/backups/BigMike/gitlab/
+#rsync --ignore-existing $BACKUPDIR.tar.gz backups@chuck.net-labs.pl:~/backup/bigmike/gitlab/
 
 exit 0

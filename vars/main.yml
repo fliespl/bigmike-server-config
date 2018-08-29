@@ -5,11 +5,15 @@ deleted_php_versions:
   - 5.6.22
   - 5.6.30
   - 5.6.32
+  - 5.6.33
   - 7.0.7
   - 7.0.12
   - 7.0.18
+  - 7.0.26
   - 7.1.12
+  - 7.1.13
   - 7.2.0
+  - 7.2.1
 
 php_versions:
   - version: "5.4.45"
@@ -25,7 +29,7 @@ php_versions:
       - {name: "imagick"}
       - {name: "memcache"}
 
-  - version: "5.6.33"
+  - version: "5.6.37"
     major_default: 5.6
     modules:
       - {name: "apcu", version: "4.0.11"}
@@ -33,27 +37,27 @@ php_versions:
       - {name: "memcache"}
       - {name: "redis", version: "2.2.8"}
 
-  - version: "7.0.26"
+  - version: "7.0.31"
     major_default: 7.0
     modules:
       - {name: "imagick"}
-      - {name: "redis", version: 3.1.4}
+      - {name: "redis", version: 4.1.1}
 
 
-  - version: "7.1.13"
+  - version: "7.1.21"
     major_default: 7.1
     modules:
       - {name: "imagick"}
-      - {name: "redis", version: 3.1.4}
+      - {name: "redis", version: 4.1.1 }
 
 
-  - version: "7.2.1"
+  - version: "7.2.9"
     major_default: 7.2
     modules:
       - {name: "imagick"}
-      - {name: "redis", version: 3.1.4}
+      - {name: "redis", version: 4.1.1 }
 
-default_php: 7.0
+default_php: 7.2.9
 
 pdns_mysql_db: config_pdns
 pdns_mysql_user: pdns

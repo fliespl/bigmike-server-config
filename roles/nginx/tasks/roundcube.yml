@@ -19,7 +19,7 @@
     dest: "{{ mail_vhost_htdocs }}/config/config.inc.php"
 
 - name: Create roundcube database
-  mysql_db: login_user=root login_password={{ mysql_root_password }} name={{ roundcube_mysql_db }} state=present encoding=utf8
+  mysql_db: name={{ roundcube_mysql_db }} state=present encoding=utf8
 
 - name: Check if roundcube database empty
   shell: /usr/bin/mysql -Bse "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = '{{ roundcube_mysql_db }}';"
@@ -32,4 +32,4 @@
   when: roundcube_database_tables_count.stdout == "0"
 
 - name: Create roundcube user
-  mysql_user: login_user=root login_password={{ mysql_root_password }} name={{ roundcube_mysql_user }} password={{ roundcube_mysql_pass }} priv="{{ roundcube_mysql_db }}.*:ALL" state=present
+  mysql_user: name={{ roundcube_mysql_user }} password={{ roundcube_mysql_pass }} priv="{{ roundcube_mysql_db }}.*:ALL" state=present
