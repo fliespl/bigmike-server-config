@@ -15,31 +15,29 @@ fi
 for dir in /var/www/accounts/*
 do
   base=$(basename "$dir")
-  tar -zcf "$BACKUPDIR/$base.tar.gz" --ignore-failed-read --exclude-tag-all=.do-not-backup -C  /var/www/accounts "${base}"
+  tar -zcf "$BACKUPDIR/$base.tar.gz" --warning=no-file-changed --ignore-failed-read --exclude-tag-all=.do-not-backup -C  /var/www/accounts "${base}"
 
-  if test $? -eq 0
+  if test $? -ne 0
   then
-  	rm -rf $BACKUPDIR
-  else
   	echo "Backup file not created." >&2
   	exit 1
   fi
 done
 
-zip -q -s 500m -r $BACKUPDIR.zip $BACKUPDIR/*
-
+zip -q -s 1024m -r $BACKUPDIR.zip $BACKUPDIR/*
 if test $? -eq 0
 then
 	rm -rf $BACKUPDIR
 else
-	echo "Backup file not created." >&2
+	echo "Backup file not created zip." >&2
 	exit 1
 fi
 
 # echo "Cleaning up old backups (older than $AGE days) and temporary files"
 find $BACKUP -mindepth 1 -maxdepth 1 -ctime +$AGE -exec rm -rf {} \;
 
-ncftpput -V -t 10800 Backup /BigMike/nginx $BACKUP/$TIMESTAMP.z*
-rsync --ignore-existing $BACKUP/$TIMESTAMP.z* backups@chuck.net-labs.pl:~/backup/bigmike/nginx/
+rsync --ignore-existing $BACKUP/$TIMESTAMP.z* -e "ssh -p 22222 -i ~/.ssh/backup.priv" backup@94.229.222.114:/var/backups/BigMike/nginx/
+#ncftpput -V -t 10800 Backup /BigMike/nginx $BACKUP/$TIMESTAMP.z*
+#rsync --ignore-existing $BACKUP/$TIMESTAMP.z* backups@chuck.net-labs.pl:~/backup/bigmike/nginx/
 
 exit 0
