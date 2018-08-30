@@ -46,7 +46,7 @@ fi
 # echo "Cleaning up old backups (older than $AGE days) and temporary files"
 find $BACKUP -mindepth 1 -maxdepth 1 -ctime +$AGE -exec rm -rf {} \;
 
-rsync --ignore-existing $BACKUPDIR.tar.gz -e "ssh -p 22222 -i ~/.ssh/backup.priv" backup@94.229.222.114:/var/backups/BigMike/mysql/
+rsync --ignore-existing $BACKUPDIR.tar.gz -e "ssh -p 22222 -i ~/.ssh/backup.priv" backup@78.11.99.66:/var/backups/BigMike/mysql/
 
 if test $? -eq 0
 then
