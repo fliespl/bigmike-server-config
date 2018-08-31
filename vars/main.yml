@@ -57,6 +57,12 @@ php_versions:
       - {name: "imagick"}
       - {name: "redis", version: 4.1.1 }
 
+  - version: "7.3.0beta3"
+    major_default: 7.3
+    modules:
+    - {name: "imagick"}
+    - {name: "redis", version: 4.1.1 }
+
 default_php: 7.2.9
 
 pdns_mysql_db: config_pdns
