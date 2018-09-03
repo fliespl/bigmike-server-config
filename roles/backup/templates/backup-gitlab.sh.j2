@@ -26,13 +26,16 @@ FILE=`ls -t /var/opt/gitlab/backups/*_gitlab_backup.tar | head -1`
 cp $FILE $BACKUPDIR/$(basename $FILE)
 
 # config backup
-sudo sh -c 'umask 0077; tar -cf ${BACKUPDIR}/etc-gitlab.tar -C / etc/gitlab'
+tar -cf ${BACKUPDIR}/etc-gitlab.tar -C / etc/gitlab
+chmod 600 ${BACKUPDIR}/etc-gitlab.tar
 
 # ssh backup
-sudo sh -c 'umask 0077; tar -cf ${BACKUPDIR}/etc-ssh.tar -C / etc/ssh'
+tar -cf ${BACKUPDIR}/etc-ssh.tar -C / etc/ssh
+chmod 600 ${BACKUPDIR}/etc-ssh.tar
 
 # gitlab ssh backup
-sudo sh -c 'umask 0077; tar -cf ${BACKUPDIR}/gitlab-ssh.tar -C / var/opt/gitlab/.ssh'
+tar -cf ${BACKUPDIR}/gitlab-ssh.tar -C / var/opt/gitlab/.ssh
+chmod 600 ${BACKUPDIR}/gitlab-ssh.tar
 
 tar -zcf $BACKUPDIR.tar.gz -C $BACKUP $TIMESTAMP
 
@@ -46,7 +49,7 @@ rm -rf $BACKUPDIR
 
 find $BACKUP -mindepth 1 -maxdepth 1 -ctime +$AGE -exec rm -rf {} \;
 
-rsync --ignore-existing $BACKUPDIR.tar.gz -e "ssh -p 22222 -i ~/.ssh/backup.priv" backup@78.11.99.66:/var/backups/BigMike/gitlab/
-#rsync --ignore-existing $BACKUPDIR.tar.gz backups@chuck.net-labs.pl:~/backup/bigmike/gitlab/
+rsync $BACKUPDIR.tar.gz -e "ssh -p 22222 -i ~/.ssh/backup.priv" backup@78.11.99.66:/var/backups/BigMike/gitlab/
+#rsync $BACKUPDIR.tar.gz backups@chuck.net-labs.pl:~/backup/bigmike/gitlab/
 
 exit 0

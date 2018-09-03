@@ -25,7 +25,7 @@ do
 done
 
 zip -q -s 1024m -r $BACKUPDIR.zip $BACKUPDIR/*
-if test $? -eq 0
+if test $? -ne 2
 then
 	rm -rf $BACKUPDIR
 else
@@ -36,8 +36,8 @@ fi
 # echo "Cleaning up old backups (older than $AGE days) and temporary files"
 find $BACKUP -mindepth 1 -maxdepth 1 -ctime +$AGE -exec rm -rf {} \;
 
-rsync --ignore-existing $BACKUP/$TIMESTAMP.z* -e "ssh -p 22222 -i ~/.ssh/backup.priv" backup@78.11.99.66:/var/backups/BigMike/nginx/
+rsync $BACKUP/$TIMESTAMP.z* -e "ssh -p 22222 -i ~/.ssh/backup.priv" backup@78.11.99.66:/var/backups/BigMike/nginx/
 #ncftpput -V -t 10800 Backup /BigMike/nginx $BACKUP/$TIMESTAMP.z*
-#rsync --ignore-existing $BACKUP/$TIMESTAMP.z* backups@chuck.net-labs.pl:~/backup/bigmike/nginx/
+#rsync $BACKUP/$TIMESTAMP.z* backups@chuck.net-labs.pl:~/backup/bigmike/nginx/
 
 exit 0
