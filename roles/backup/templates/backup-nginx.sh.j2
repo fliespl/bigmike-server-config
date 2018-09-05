@@ -17,15 +17,15 @@ do
   base=$(basename "$dir")
   tar -zcf "$BACKUPDIR/$base.tar.gz" --warning=no-file-changed --ignore-failed-read --exclude-tag-all=.do-not-backup -C  /var/www/accounts "${base}"
 
-  if test $? -ne 0
+  if test $? -eq 2
   then
-  	echo "Backup file not created." >&2
+    echo "Backup file (${dir}) not created." >&2
   	exit 1
   fi
 done
 
 zip -q -s 1024m -r $BACKUPDIR.zip $BACKUPDIR/*
-if test $? -ne 2
+if test $? -eq 0
 then
 	rm -rf $BACKUPDIR
 else

@@ -36,13 +36,7 @@
 - name: Prepare list of php versions
   template:
     src: index.j2
-    dest: "{{ main_vhost_htdocs }}/php/index.html"
-
-- name: Prepare info.php
-  template:
-    src: info.php.j2
-    dest: "{{ main_vhost_htdocs }}/php/info.php"
-
+    dest: "{{ main_vhost_htdocs }}/php/index.php"
 
 - name: prepare upstreams
   template:

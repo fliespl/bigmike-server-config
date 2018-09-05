@@ -32,17 +32,16 @@ server {
     location /php {
         include global/admin-only-access.conf;
 
-        index index.html;
+        fastcgi_pass unix:/var/run/php-fpm.sock;
+        fastcgi_param SCRIPT_FILENAME $document_root/php/index.php;
+        include        fastcgi_params;
 
-        location /php/index.html { }
 
-        {% for php in php_versions %}
-        location = /php/{{ php.version }} {
-            fastcgi_pass unix:/var/run/php/php{{ php.version }}-fpm.sock;
-            fastcgi_param  SCRIPT_FILENAME  {{ main_vhost_htdocs }}/php/info.php;
+        location ~ /php/([0-9]+\.[0-9]+\.[0-9]+)$ {
+            fastcgi_pass unix:/var/run/php/php$1-fpm.sock;
+            fastcgi_param SCRIPT_FILENAME $document_root/php/index.php;
             include        fastcgi_params;
         }
-        {% endfor %}
     }
 
     location /monit/ {

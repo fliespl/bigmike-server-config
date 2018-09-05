@@ -1,3 +1,31 @@
+<?php
+
+$phpVersions =  explode("\n", shell_exec('ls -1 /etc/systemd/system/php-fpm-*'));
+$phpVersions = array_filter($phpVersions);
+
+array_walk($phpVersions, function(&$php) {
+    $php = str_replace(['/etc/systemd/system/php-fpm-', '.service'], '', $php);
+});
+
+if (isset($_SERVER['DOCUMENT_URI']) && $_SERVER['DOCUMENT_URI'] !== '/' && $_SERVER['DOCUMENT_URI'] !== '/php') {
+    ob_start();
+    phpinfo();
+    $phpinfo = ob_get_contents();
+    ob_end_clean();
+
+
+    $button = <<<HTML
+    <div id="top" style="position:fixed;">
+        <a href="/php">Go back</a>
+    </div>
+HTML;
+
+    $phpinfo = str_replace('<body>', '<body>'.$button, $phpinfo);
+
+    echo $phpinfo;
+    die;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,11 +34,15 @@
 </head>
 <body>
 <ul>
-{% for php in php_versions %}
-    <li><a href="/php/{{ php.version}}">PHP {{ php.version }}</a></li>
-{% endfor %}
+    <?php
+
+    foreach($phpVersions as $php) {
+        ?>
+        <li><a href="/<?php echo $php; ?>">PHP <?php echo $php; ?></a></li>
+        <?php
+    }
+    ?>
 </ul>
 </body>
 </html>
-
 
