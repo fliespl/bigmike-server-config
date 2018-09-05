@@ -7,7 +7,7 @@ array_walk($phpVersions, function(&$php) {
     $php = str_replace(['/etc/systemd/system/php-fpm-', '.service'], '', $php);
 });
 
-if (isset($_SERVER['DOCUMENT_URI']) && $_SERVER['DOCUMENT_URI'] !== '/' && $_SERVER['DOCUMENT_URI'] !== '/php') {
+if (isset($_SERVER['DOCUMENT_URI']) && $_SERVER['DOCUMENT_URI'] !== '/' && $_SERVER['DOCUMENT_URI'] !== '/php/index.php') {
     ob_start();
     phpinfo();
     $phpinfo = ob_get_contents();
@@ -38,7 +38,7 @@ HTML;
 
     foreach($phpVersions as $php) {
         ?>
-        <li><a href="/<?php echo $php; ?>">PHP <?php echo $php; ?></a></li>
+        <li><a href="/php/<?php echo $php; ?>">PHP <?php echo $php; ?></a></li>
         <?php
     }
     ?>

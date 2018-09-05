@@ -28,22 +28,6 @@ server {
         index index.html;
     }
 
-    # allow loading /index.php
-    location /php {
-        include global/admin-only-access.conf;
-
-        fastcgi_pass unix:/var/run/php-fpm.sock;
-        fastcgi_param SCRIPT_FILENAME $document_root/php/index.php;
-        include        fastcgi_params;
-
-
-        location ~ /php/([0-9]+\.[0-9]+\.[0-9]+)$ {
-            fastcgi_pass unix:/var/run/php/php$1-fpm.sock;
-            fastcgi_param SCRIPT_FILENAME $document_root/php/index.php;
-            include        fastcgi_params;
-        }
-    }
-
     location /monit/ {
         include global/admin-only-access.conf;
 
@@ -53,36 +37,68 @@ server {
         proxy_redirect  http://127.0.0.1:2812 /monit;
     }
 
-    location /munin/static/ {
-        alias /etc/munin/static/;
-    }
-
-    location ^~ /munin-cgi/munin-cgi-graph/ {
-        access_log off;
-        fastcgi_split_path_info ^(/munin-cgi/munin-cgi-graph)(.*);
-        fastcgi_param PATH_INFO $fastcgi_path_info;
-        fastcgi_pass unix:/var/run/munin/fcgi-graph.sock;
-        include fastcgi_params;
-    }
-
-    location /munin/ {
+    location ^~ /munin {
         include global/admin-only-access.conf;
-        alias /var/cache/munin/www/;
+        alias /var/cache/munin/www;
+        index index.html;
+
+        try_files $uri $uri/ =404;
+
+        location /munin/static/ {
+            alias /etc/munin/static/;
+        }
     }
 
-    location ~ ^/(phpmyadmin|postfixadmin) {
+    location ^~ /php {
         include global/admin-only-access.conf;
-
+        alias /var/www/bigmike.ovh/htdocs/php;
         index index.php;
 
-        location ~ ^/(.+\.php)$ {
+        location ~* \.php$ {
+            try_files $uri =404;
+            fastcgi_pass unix:/var/run/php-fpm.sock;
+            fastcgi_index index.php;
+            fastcgi_split_path_info ^(.+\.php)(.*)$;
+            include        fastcgi_params;
+            fastcgi_param  SCRIPT_FILENAME  $request_filename;
+        }
+
+        location ~ /([0-9]+\.[0-9]+\.[0-9]+.*)$ {
+            fastcgi_pass unix:/var/run/php/php$1-fpm.sock;
+            fastcgi_param SCRIPT_FILENAME $document_root/index.php;
+            include        fastcgi_params;
+        }
+    }
+
+    location ^~ /postfixadmin {
+        include global/admin-only-access.conf;
+        alias /var/www/bigmike.ovh/htdocs/postfixadmin/public;
+        index index.php;
+
+        location ~* \.php$ {
+            try_files $uri =404;
+            fastcgi_pass unix:/var/run/php-fpm.sock;
+            fastcgi_index index.php;
+            fastcgi_split_path_info ^(.+\.php)(.*)$;
+            include        fastcgi_params;
+            fastcgi_param  SCRIPT_FILENAME  $request_filename;
+        }
+    }
+
+
+    location ^~ /phpmyadmin {
+        include global/admin-only-access.conf;
+        alias /var/www/bigmike.ovh/htdocs/phpmyadmin;
+        index index.php;
+
+        location ~* \.php$ {
             try_files $uri =404;
             fastcgi_read_timeout 180;
-            fastcgi_split_path_info ^(.+\.php)(/.+)$;
             fastcgi_pass unix:/var/run/php-fpm.sock;
-            fastcgi_index  index.php;
-            fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
-            include        fastcgi_params;
+            fastcgi_index index.php;
+            fastcgi_split_path_info ^(.+\.php)(.*)$;
+            include fastcgi_params;
+            fastcgi_param SCRIPT_FILENAME $request_filename;
         }
     }
 
