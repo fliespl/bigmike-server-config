@@ -2,12 +2,12 @@
   file: path=/scripts state=directory mode=0644
 
 - template:
-    src: backup-gitlab.sh.j2
+    src: backup-gitlab.sh
     dest: "/scripts/backup-gitlab.sh"
     mode: 0744
 
 - template:
-    src: backup-mysql.sh.j2
+    src: backup-mysql.sh
     dest: "/scripts/backup-mysql.sh"
     mode: 0744
 
