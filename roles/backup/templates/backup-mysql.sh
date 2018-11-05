@@ -18,7 +18,8 @@ date -R > ${OUTPUT}
 
 for db in ${databases}; do
 	echo "Backing up database $db" >> ${OUTPUT}
-	/usr/bin/time -f "Took: %E"  bash -c '/usr/bin/mysqldump --defaults-extra-file=/etc/mysql/debian.cnf --single-transaction --quick --events '"$db"' | gzip --fast --rsyncable > '"${BACKUPDIR}"'/'"$db"'.sql.gz' 2>>${OUTPUT}
+	/usr/bin/time -f "Took: %E"  bash -c '/usr/bin/mysqldump --defaults-extra-file=/etc/mysql/debian.cnf \
+	--single-transaction --quick --events '"$db"' | gzip --fast --rsyncable > '"${BACKUPDIR}"'/'"$db"'.sql.gz' 2>>${OUTPUT}
 	if test $? -ne 0
 	then
 		echo -e "Error making backup $db:\n\n$(cat ${OUTPUT})"
@@ -26,7 +27,9 @@ for db in ${databases}; do
 	fi
 done
 
-/usr/bin/time -v  bash -c 'rdiff-backup --no-acls --preserve-numerical-ids --remote-schema "ssh -i ~/.ssh/backup.priv -C -p22222 %s rdiff-backup --server" -v3 '"${BACKUPDIR}"' backup@78.11.99.66::/var/backups/BigMike/mysql-rdiff' 2>>${OUTPUT}
+/usr/bin/time -v  bash -c 'rdiff-backup --no-acls --preserve-numerical-ids \
+--remote-schema "ssh -i ~/.ssh/backup.priv -C -p22222 %s rdiff-backup --server" -v3 '"${BACKUPDIR}"' \
+backup@78.11.99.66::/var/backups/BigMike/mysql-rdiff' 2>>${OUTPUT}
 
 if test $? -ne 0
 then
