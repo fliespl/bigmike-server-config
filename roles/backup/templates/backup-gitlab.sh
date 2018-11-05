@@ -14,7 +14,7 @@ fi
 
 date -R > ${OUTPUT}
 
-#/usr/bin/time -f "Took: %E"  bash -c '/opt/gitlab/bin/gitlab-rake gitlab:backup:create >&2' 2>>$OUTPUT
+/usr/bin/time -f "Took: %E"  bash -c '/opt/gitlab/bin/gitlab-rake gitlab:backup:create >&2' 2>>${OUTPUT}
 
 if test $? -ne 0
 then
