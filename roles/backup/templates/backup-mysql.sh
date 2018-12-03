@@ -15,11 +15,10 @@ fi
 databases=`/usr/bin/mysql --defaults-extra-file=/etc/mysql/debian.cnf -e "SHOW DATABASES;" | grep -Ev "(Database|information_schema|performance_schema)"`
 
 date -R > ${OUTPUT}
-
 for db in ${databases}; do
 	echo "Backing up database $db" >> ${OUTPUT}
-	/usr/bin/time -f "Took: %E"  bash -c '/usr/bin/mysqldump --defaults-extra-file=/etc/mysql/debian.cnf \
-	--single-transaction --quick --events '"$db"' | gzip --fast --rsyncable > '"${BACKUPDIR}"'/'"$db"'.sql.gz' 2>>${OUTPUT}
+    /usr/bin/time -f "Took: %E"  bash -c 'mydumper -e -B '"$db"' -o '"$BACKUPDIR/$db" 2>>${OUTPUT}
+
 	if test $? -ne 0
 	then
 		echo -e "Error making backup $db:\n\n$(cat ${OUTPUT})"
