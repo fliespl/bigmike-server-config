@@ -4,6 +4,8 @@ BACKUP="/var/backups/mysql"
 BACKUPDIR="$BACKUP/tmp"
 OUTPUT="$BACKUP/backup.out"
 
+# TODO: add exclusion to tables
+
 rm -rf "$BACKUPDIR"
 mkdir -p "$BACKUPDIR"
 

@@ -24,7 +24,7 @@ fi
 
 
 FILE=`ls -t /var/opt/gitlab/backups/*_gitlab_backup.tar | head -1`
-tar -xf ${FILE} -C ${BACKUPDIR}
+cp ${FILE} ${BACKUPDIR}/$(basename $FILE)
 
 OTHER="$BACKUPDIR/other"
 mkdir -p ${OTHER}
@@ -45,5 +45,7 @@ then
 	echo -e "Error sending files:\n\n$(cat ${OUTPUT})"
 	exit 1
 fi
+
+ssh -i ~/.ssh/backup.priv -C -p22222 backup@78.11.99.66 rdiff-backup --force --remove-older-than 7B /var/backups/BigMike/gitlab-rdiff
 
 exit 0
