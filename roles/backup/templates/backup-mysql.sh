@@ -4,8 +4,6 @@ BACKUP="/var/backups/mysql"
 BACKUPDIR="$BACKUP/tmp"
 OUTPUT="$BACKUP/backup.out"
 
-# TODO: add exclusion to tables
-
 rm -rf "$BACKUPDIR"
 mkdir -p "$BACKUPDIR"
 
@@ -17,6 +15,7 @@ fi
 databases=`/usr/bin/mysql --defaults-extra-file=/etc/mysql/debian.cnf -e "SHOW DATABASES;" | grep -Ev "(Database|information_schema|performance_schema)"`
 
 date -R > ${OUTPUT}
+
 for db in ${databases}; do
 	echo "Backing up database $db" >> ${OUTPUT}
     /usr/bin/time -f "Took: %E"  bash -c 'mydumper -e -B '"$db"' -o '"$BACKUPDIR/$db" 2>>${OUTPUT}
