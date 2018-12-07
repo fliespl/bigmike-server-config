@@ -46,4 +46,12 @@ then
 	exit 1
 fi
 
+ssh -i ~/.ssh/backup.priv -C -p22222 backup@78.11.99.66 rdiff-backup -v 2 --force --remove-older-than 7B /var/backups/BigMike/gitlab-rdiff 2>>${OUTPUT}
+
+if test $? -ne 0
+then
+	echo -e "Error deleting old backups files:\n\n$(cat ${OUTPUT})"
+	exit 1
+fi
+
 exit 0

@@ -1,3 +1,7 @@
+- name: "Stop php-fpm service {{ php.version }}"
+  systemd: name="php-fpm-{{ php }}" state=stopped enabled=no daemon_reload=yes
+  failed_when: false
+
 - file: path="/run/php/{{ php }}" state=absent
 
 - file: path="/opt/phpfarm/inst/sessions/{{ php }}" state=absent
@@ -24,13 +28,9 @@
 
 - file: path="/opt/phpfarm/src/bzips/php-{{ php }}.tar.bz2" state=absent
 
-- name: "Stop php-fpm service {{ php.version }}"
-  systemd: name="php-fpm-{{ php }}" state=stopped enabled=no daemon_reload=yes
-  failed_when: false
-
 - file: path="/etc/systemd/system/php-fpm-{{ php }}.service" state=absent
-  notify: reload systemd
 
-- file: path=/usr/local/bin/php-{{ php[0:3] }} state=absent
+- name: just force systemd to reread configs (2.4 and above)
+  systemd: daemon_reload=yes
 
 - meta: flush_handlers

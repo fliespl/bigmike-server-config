@@ -1,3 +1,18 @@
+- stat:
+    path: "/opt/phpfarm/inst/php-{{ php.version }}/bin/php"
+  register: php_installed
+
+- stat:
+    path: "/opt/phpfarm/src/php-{{ php.version }}/Makefile"
+  register: makefile
+
+
+- name: Clean src if not installed
+  shell: "make clean"
+  args:
+    chdir: "/opt/phpfarm/src/php-{{ php.version }}"
+  when: not php_installed.stat.exists and makefile.stat.exists
+
 - name: "Compiling PHP {{ php.version }}"
   shell: "./main.sh {{ php.version }}"
   args:
@@ -9,7 +24,6 @@
     src: php-fpm.conf.j2
     dest: "/opt/phpfarm/inst/php-{{ php.version }}/etc/php-fpm.conf"
   notify:
-    - "reload systemd"
     - "start php-fpms"
 
 - name: "Created php-fpm pool directory {{ php.version }}"
@@ -28,19 +42,23 @@
     dest: "/etc/systemd/system/php-fpm-{{ php.version }}.service"
     mode: 0664
   notify:
-    - "reload systemd"
     - "start php-fpms"
 
 - name: "Enable php-fpm-{{ php.version }} on boot"
-  service: name="php-fpm-{{ php.version }}" enabled=yes
+  systemd: name="php-fpm-{{ php.version }}" enabled=yes daemon_reload=yes
 
 - shell: "/opt/phpfarm/inst/php-{{ php.version }}/bin/php-config --extension-dir"
   register: extension_dir
   changed_when: false
   check_mode: no
+  when: not ansible_check_mode
 
 - name: "compile php module {{ item }}"
-  include: phpmodule.yml
+  include_tasks: phpmodule.yml
   with_items: "{{ php.modules }}"
   loop_control:
     loop_var: module
+  when: not ansible_check_mode
+
+- file: src=/opt/phpfarm/inst/bin/php-{{ php.version }} dest=/usr/local/bin/php{{ php.major_default|default(false) }} state=link
+  when: php.major_default|default(false)

@@ -1,3 +1,25 @@
+- apt:
+    name:
+      - build-essential
+      - libxml2-dev
+      - libcurl4-openssl-dev
+      - libssl-dev
+      - libbz2-dev
+      - libjpeg-turbo8-dev
+      - libbison-dev
+      - libpng-dev
+      - libfreetype6-dev
+      - libc-client-dev
+      - libkrb5-dev
+      - libmcrypt-dev
+      - libxslt-dev
+      - autoconf
+      - libmagickwand-dev
+      - libmysqlclient-dev
+    state: present
+
+- import_tasks: openssl.yml
+
 - name: Register phpfarm
   stat: path=/opt/phpfarm/build.xml
   register: phpfarm_file
@@ -33,6 +55,14 @@
   template:
     src: options-5.5+.sh.j2
     dest: "/opt/phpfarm/custom/options-7.sh"
+
+- file: src=/usr/include/x86_64-linux-gnu/curl dest=/usr/local/include/curl state=link
+
+- name: compile php versions
+  include_tasks: phpfarm.yml
+  with_items: "{{ php_versions }}"
+  loop_control:
+    loop_var: php
 
 - name: "Install php-fpm restart script"
   template:
@@ -84,34 +114,13 @@
   notify:
     - restart php-fpms
 
-- name: compile php versions
-  include: phpfarm.yml
-  with_items: "{{ php_versions }}"
-  loop_control:
-    loop_var: php
-
-- name: delete old php versions
-  include: delete.yml
-  with_items: "{{ deleted_php_versions }}"
-  loop_control:
-    loop_var: php
-
-- name: "Make default php"
-  command: "/opt/phpfarm/inst/bin/switch-phpfarm {{ default_php }}"
+- command: "/opt/phpfarm/inst/bin/switch-phpfarm {{ default_php }}"
   changed_when: false
 
 - file: src=/opt/phpfarm/inst/current/bin/php dest=/usr/local/bin/php state=link
-
-
-- name: create php versions symlinks
-  file: src=/opt/phpfarm/inst/bin/php-{{ php.version }} dest=/usr/local/bin/php-{{ php.major_default }} state=link
-  with_items: "{{ php_versions }}"
-  when: php.major_default|default(false)
-  loop_control:
-    loop_var: php
 
 - meta: flush_handlers
 
 - file: src=/var/run/php/php{{ default_php }}-fpm.sock dest=/var/run/php-fpm.sock state=link
 
-
+- include_tasks: delete-old-php.yml

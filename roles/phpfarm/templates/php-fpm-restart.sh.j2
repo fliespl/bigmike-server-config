@@ -1,6 +1,3 @@
 #!/bin/bash
 
-{% for php in php_versions %}
-service php-fpm-{{ php.version }} restart
-sleep 0.5
-{% endfor %}
+systemctl restart 'php-fpm-*' --all

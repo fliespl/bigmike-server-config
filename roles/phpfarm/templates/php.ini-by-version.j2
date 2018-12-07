@@ -1,20 +1,22 @@
 session.save_path=/opt/phpfarm/inst/sessions/{{ php.version }}
 
-{% if php.version | version_compare('5.5', ">=") %}
-    zend_extension=opcache.so
-
-
-    opcache.memory_consumption=128
-    opcache.interned_strings_buffer=8
-    opcache.max_accelerated_files=4000
-    opcache.revalidate_freq=60
-    opcache.fast_shutdown=1
-    opcache.enable_cli=1
+{% if php.version is version_compare('5.5', ">=") %}
+zend_extension=opcache.so
+opcache.enable=1
+opcache.max_accelerated_files=130987
+opcache.memory_consumption=192
+opcache.interned_strings_buffer=32
+opcache.revalidate_freq=60
+opcache.fast_shutdown=1
+opcache.enable_cli=1
 {% endif %}
 
 {% for module in php.modules %}
     {% if module.name == 'xdebug' %}
 zend_extension={{ module.name }}.so
+xdebug.remote_enable=1
+xdebug.remote_host=127.0.0.1
+xdebug.remote_port=9000
     {% else %}
 extension={{ module.name }}.so
     {% endif %}
