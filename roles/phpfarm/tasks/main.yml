@@ -56,7 +56,12 @@
     src: options-5.5+.sh.j2
     dest: "/opt/phpfarm/custom/options-7.sh"
 
+- stat:
+    path: "/usr/include/x86_64-linux-gnu/curl"
+  register: curl_file
+
 - file: src=/usr/include/x86_64-linux-gnu/curl dest=/usr/local/include/curl state=link
+  when: curl_file.stat.exists
 
 - name: compile php versions
   include_tasks: phpfarm.yml
