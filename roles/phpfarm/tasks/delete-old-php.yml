@@ -1,0 +1,12 @@
+- set_fact: installed_php_versions="{{ installed_php_versions|default([]) }} + [ '{{ item|basename|replace('.service', '')|replace('php-fpm-', '') }}' ]"
+  with_fileglob: "/etc/systemd/system/php-fpm-*.service"
+
+- set_fact: current_php_versions="{{ current_php_versions|default([]) }} + [ '{{ item.version }}' ]"
+  with_items: "{{ php_versions }}"
+
+- name: "Deleting old php versions"
+  include_tasks: delete.yml
+  with_items: "{{ installed_php_versions }}"
+  when: php not in current_php_versions
+  loop_control:
+    loop_var: php

@@ -1,0 +1,17 @@
+- name: "Download openssl library"
+  unarchive:
+    src: https://www.openssl.org/source/openssl-1.0.2q.tar.gz
+    dest: /tmp
+    remote_src: yes
+  args:
+    creates: "/tmp/openssl-1.0.2q.tar.gz"
+
+- name: Build openssl
+  shell: "{{ item }}"
+  args:
+    chdir: "/tmp/openssl-1.0.2q"
+    creates: "/opt/openssl/bin/openssl"
+  with_items:
+    - ./config -fPIC --prefix=/opt/openssl --openssldir=/opt/openssl shared zlib
+    - make
+    - make install
