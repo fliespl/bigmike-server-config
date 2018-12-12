@@ -1,5 +1,12 @@
-- set_fact: installed_php_versions="{{ installed_php_versions|default([]) }} + [ '{{ item|basename|replace('.service', '')|replace('php-fpm-', '') }}' ]"
-  with_fileglob: "/etc/systemd/system/php-fpm-*.service"
+#- set_fact: installed_php_versions="{{ installed_php_versions|default([]) }} + [ '{{ item|basename|replace('.service', '')|replace('php-fpm-', '') }}' ]"
+#  with_fileglob: "/etc/systemd/system/php-fpm-*.service"
+
+
+- name: get all installed php versions
+  shell: find /etc/systemd/system/ -type f -name php-fpm-*.service | sed -e 's/.service//' | sed -e 's/\/etc\/systemd\/system\/php-fpm-//'
+  register: installed_php_versions
+
+- debug: msg="{{ installed_php_versions }}"
 
 - set_fact: current_php_versions="{{ current_php_versions|default([]) }} + [ '{{ item.version }}' ]"
   with_items: "{{ php_versions }}"

@@ -128,4 +128,5 @@
 
 - file: src=/var/run/php/php{{ default_php }}-fpm.sock dest=/var/run/php-fpm.sock state=link
 
-- include_tasks: delete-old-php.yml
+- name: Delete old php versions
+  include_tasks: delete-old-php.yml
