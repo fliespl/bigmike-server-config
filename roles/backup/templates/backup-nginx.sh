@@ -7,7 +7,7 @@ AGE=7
 
 mkdir -p "$BACKUPDIR"
 
-if [ ! -d $BACKUPDIR ]; then
+if [[ ! -d ${BACKUPDIR} ]]; then
 	echo "Backup destination folder: $BACKUPDIR does not exist."; echo
 	exit 1
 fi

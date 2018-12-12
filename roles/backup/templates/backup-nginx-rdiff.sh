@@ -3,7 +3,7 @@
 
 nice /usr/bin/rdiff-backup --no-acls --preserve-numerical-ids --remote-schema "ssh -i ~/.ssh/backup.priv -C -p22222 %s sudo rdiff-backup --server" -v3 \
    --include /etc \
-   --include /opt --exclude /opt/libreoffice --exclude /opt/phpfarm/src --exclude /opt/phpfarm/inst/sessions \
+   --include /opt --exclude /opt/gitlab --exclude /opt/online --exclude /opt/google --exclude /opt/libreoffice --exclude /opt/phpfarm/src --exclude /opt/phpfarm/inst/sessions \
    --exclude "**" \
     / \
    backup@78.11.99.66::/var/backups/BigMike/fs

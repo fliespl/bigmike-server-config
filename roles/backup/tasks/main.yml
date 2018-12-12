@@ -12,7 +12,7 @@
     mode: 0744
 
 - template:
-    src: backup-nginx.sh.j2
+    src: backup-nginx.sh
     dest: "/scripts/backup-nginx.sh"
     mode: 0744
 
