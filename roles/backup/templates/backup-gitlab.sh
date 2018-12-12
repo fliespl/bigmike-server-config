@@ -38,7 +38,7 @@ cp -R /var/opt/gitlab/.ssh ${OTHER}/var/opt/gitlab
 
 /usr/bin/time -v  bash -c 'rdiff-backup --no-acls --preserve-numerical-ids \
 --remote-schema "ssh -i ~/.ssh/backup.priv -C -p22222 %s rdiff-backup --server" -v3 '"${BACKUPDIR}"' \
-backup@78.11.99.66::/var/backups/BigMike/gitlab-rdiff' 2>>${OUTPUT}
+backup@78.11.99.66::/var/backups/BigMike/gitlab' 2>>${OUTPUT}
 
 if test $? -ne 0
 then
@@ -46,7 +46,7 @@ then
 	exit 1
 fi
 
-ssh -i ~/.ssh/backup.priv -C -p22222 backup@78.11.99.66 rdiff-backup -v 2 --force --remove-older-than 7B /var/backups/BigMike/gitlab-rdiff 2>>${OUTPUT}
+ssh -i ~/.ssh/backup.priv -C -p22222 backup@78.11.99.66 rdiff-backup -v 2 --force --remove-older-than 7B /var/backups/BigMike/gitlab 2>>${OUTPUT}
 
 if test $? -ne 0
 then
