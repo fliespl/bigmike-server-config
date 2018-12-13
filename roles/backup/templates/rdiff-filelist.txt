@@ -23,6 +23,8 @@
 - /var/log
 - /var/opt/gitlab
 - /var/www/**/.git
+- /var/www/accounts/japcok
+- /var/www/accounts/machelp
 
 
 
@@ -38,9 +40,12 @@
 /var/mail
 /var/spool
 /var/vmail
+/var/www/accounts
 /var/www/mail.bigmike.ovh
 /var/www/bigmike.ovh
 
 
 
 - **
+
+
