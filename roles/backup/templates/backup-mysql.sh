@@ -30,7 +30,7 @@ for db in ${databases}; do
 
     if test $? -ne 0
     then
-        echo "Database ${db} excluded"
+        echo "Database ${db} excluded" >> ${OUTPUT}
         continue
     fi
 

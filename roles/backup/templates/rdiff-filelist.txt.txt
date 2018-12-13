@@ -1,0 +1,10 @@
+- /opt/gitlab
+- /opt/online
+- /opt/google
+- /opt/libreoffice
+- /opt/phpfarm/src
+- /opt/phpfarm/inst/sessions
+
+/etc
+/opt
+- **
