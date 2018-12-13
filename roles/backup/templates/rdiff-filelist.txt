@@ -1,3 +1,9 @@
+- /home/*/.cache
+- /home/*/Downloads
+- /home/*/.local/share/Trash
+- /home/flies/camera
+- /home/japcok
+
 - /opt/gitlab
 - /opt/online
 - /opt/google
@@ -5,16 +11,36 @@
 - /opt/phpfarm/src
 - /opt/phpfarm/inst/sessions
 
+- /root/.cache
+- /root/.local/share/Trash
 
-- /home/*/.cache
-- /home/*/Downloads
-- /home/*/.local/share/Trash
-- /home/flies/camera
-- /home/japcok
+- /tmp
+
+- /var/backups
+- /var/cache
+- /var/crash
+- /var/lib/docker
+- /var/log
+- /var/opt/gitlab
+- /var/www/**/.git
+
+
 
 /home/lool
 
 /etc
 /home
 /opt
+/root
+/scripts
+/srv
+/usr/local
+/var/mail
+/var/spool
+/var/vmail
+/var/www/mail.bigmike.ovh
+/var/www/bigmike.ovh
+
+
+
 - **
