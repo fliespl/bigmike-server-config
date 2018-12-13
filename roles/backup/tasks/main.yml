@@ -21,6 +21,12 @@
     dest: "/scripts/backup-fs.sh"
     mode: 0744
 
+
+- template:
+    src: rdiff-filelist.txt
+    dest: "/scripts/rdiff-filelist.txt"
+    mode: 0744
+
 - cron: name="Setup gitlab backup" minute="15" hour="2" job="/scripts/backup-gitlab.sh"
 - cron: name="Setup mysql backup" minute="0" hour="2" job="/scripts/backup-mysql.sh"
 - cron: name="Setup nginx backup" state=absent
