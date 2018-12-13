@@ -16,6 +16,12 @@
     dest: "/scripts/backup-nginx.sh"
     mode: 0744
 
+- template:
+    src: backup-fs.sh
+    dest: "/scripts/backup-fs.sh"
+    mode: 0744
+
 - cron: name="Setup gitlab backup" minute="15" hour="2" job="/scripts/backup-gitlab.sh"
-- cron: name="Setup mysql backup" minute="30" hour="2" job="/scripts/backup-mysql.sh"
-- cron: name="Setup nginx backup" minute="0" hour="3" job="/scripts/backup-nginx.sh"
+- cron: name="Setup mysql backup" minute="0" hour="2" job="/scripts/backup-mysql.sh"
+- cron: name="Setup nginx backup" state=absent
+- cron: name="Setup fs backup" minute="0" hour="3" job="/scripts/backup-fs.sh"
