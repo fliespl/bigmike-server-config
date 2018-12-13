@@ -5,6 +5,17 @@
 - /opt/phpfarm/src
 - /opt/phpfarm/inst/sessions
 
+
+- /home/*/.cache
+- /home/*/Downloads
+- /home/*/.local/share/Trash
+- /home/flies/camera
+- /home/japcok
+
+# libre office online
+/home/lool
+
 /etc
+/home
 /opt
 - **
