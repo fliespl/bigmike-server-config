@@ -10,6 +10,7 @@
 - /opt/libreoffice
 - /opt/phpfarm/src
 - /opt/phpfarm/inst/sessions
+- /opt/phpfarm/inst/php-*/var/run
 
 - /root/.cache
 - /root/.local/share/Trash
