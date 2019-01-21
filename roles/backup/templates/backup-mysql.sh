@@ -23,7 +23,7 @@ fi
 
 databases=`/usr/bin/mysql --defaults-extra-file=/etc/mysql/debian.cnf -e "SHOW DATABASES;" | grep -Ev "(Database|information_schema|performance_schema)"`
 
-date -R > ${OUTPUT}
+echo "Started: $(date -R)" > ${OUTPUT}
 
 for db in ${databases}; do
     $(matchesElement "${db}" "${excluded_databases[@]}")

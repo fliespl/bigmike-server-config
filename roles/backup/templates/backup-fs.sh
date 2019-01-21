@@ -13,7 +13,7 @@ if [[ ! -d ${BACKUPDIR} ]]; then
     exit 1
 fi
 
-echo "Started: $(date -R)" >> ${OUTPUT}
+echo "Started: $(date -R)" > ${OUTPUT}
 
 /usr/bin/time -v  bash -c 'nice /usr/bin/rdiff-backup --no-acls --preserve-numerical-ids --remote-schema "ssh -i ~/.ssh/backup.priv -C -p22222 %s sudo rdiff-backup --server" -v3 \
    --include-globbing-filelist "/scripts/rdiff-filelist.txt" \

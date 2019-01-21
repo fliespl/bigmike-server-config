@@ -12,7 +12,7 @@ if [[ ! -d ${BACKUPDIR} ]]; then
 	exit 1
 fi
 
-date -R > ${OUTPUT}
+echo "Started: $(date -R)" > ${OUTPUT}
 
 /usr/bin/time -f "Took: %E"  bash -c '/opt/gitlab/bin/gitlab-rake gitlab:backup:create >&2' 2>>${OUTPUT}
 
