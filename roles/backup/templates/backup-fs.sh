@@ -15,7 +15,7 @@ fi
 
 echo "Started: $(date -R)" > ${OUTPUT}
 
-/usr/bin/time -v  bash -c 'nice /usr/bin/rdiff-backup --no-acls --preserve-numerical-ids --remote-schema "ssh -i ~/.ssh/backup.priv -C -p22222 %s sudo rdiff-backup --server" -v3 \
+/usr/bin/time -v  bash -c 'nice /usr/bin/rdiff-backup --no-acls --exclude-sockets --preserve-numerical-ids --remote-schema "ssh -i ~/.ssh/backup.priv -C -p22222 %s sudo rdiff-backup --server" -v3 \
    --include-globbing-filelist "/scripts/rdiff-filelist.txt" \
     / \
    backup@78.11.99.66::/var/backups/BigMike/fs' 2>>${OUTPUT}
