@@ -16,6 +16,7 @@
     - pyrus
     - php-fpm
     - phpize
+    - phpdbg
     - php
 
 - file: path="/opt/phpfarm/inst/php-{{ php }}" state=absent
